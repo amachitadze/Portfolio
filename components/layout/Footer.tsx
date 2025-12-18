@@ -13,15 +13,15 @@ const Footer: React.FC<FooterProps> = ({ t }) => {
 
   return (
     <footer id="contact" className="snap-start min-h-screen flex flex-col items-center justify-center px-6 relative bg-white dark:bg-zinc-950 overflow-hidden">
-      {/* დეკორატიული ელემენტები */}
+      {/* დეკორატიული ელემენტი */}
       <div className="absolute left-10 md:left-20 top-1/2 -translate-y-1/2 text-zinc-100 dark:text-zinc-900 pointer-events-none hidden lg:block opacity-60">
          <svg className="w-48 h-48 -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
          </svg>
       </div>
 
-      <div className="max-w-5xl mx-auto text-center relative z-10 px-4">
-        {/* აქ გამოვიყენე typography.heroTitle.size ნაცვლად footerTitle-ისა */}
+      <div className="max-w-6xl mx-auto text-center relative z-10 px-4">
+        {/* სათაურის ზომა ახლა ზუსტად ემთხვევა Hero სექციას (typography.heroTitle.size) */}
         <h2 className={`${typography.heroTitle.size} ${typography.heroTitle.weight} ${typography.heroTitle.tracking} mb-12 text-brand-black dark:text-zinc-100 leading-[1.1] antialiased`}>
           {t.letsConnectTitle}
         </h2>

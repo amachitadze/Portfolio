@@ -40,7 +40,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   
-  // ვიწყებთ საწყისი მონაცემებით (PROJECTS), რომ სექციები არ გაქრეს
+  // ვიწყებთ საწყისი მონაცემებით constants.ts-იდან
   const [projects, setProjects] = useState<Project[]>(PROJECTS);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(INITIAL_GALLERY_ITEMS);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,19 +53,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return sessionStorage.getItem('isGalleryAuth') === 'true';
   });
 
-  // მონაცემების ჩატვირთვა Supabase-დან
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const { data: projectsData } = await supabase.from('projects').select('*').order('id', { ascending: false });
-        const { data: galleryData } = await supabase.from('gallery_items').select('*').order('id', { ascending: false });
+        const { data: projectsData, error: pError } = await supabase.from('projects').select('*').order('id', { ascending: false });
+        const { data: galleryData, error: gError } = await supabase.from('gallery_items').select('*').order('id', { ascending: false });
         
-        // მხოლოდ იმ შემთხვევაში ვანაცვლებთ, თუ ბაზაში რამე დევს
-        if (projectsData && projectsData.length > 0) setProjects(projectsData);
-        if (galleryData && galleryData.length > 0) setGalleryItems(galleryData);
+        // თუ ბაზა წარმატებით დაუკავშირდა და მონაცემები არსებობს, ვანაცვლებთ საწყისებს
+        if (projectsData && projectsData.length > 0) {
+          setProjects(projectsData);
+        }
+        if (galleryData && galleryData.length > 0) {
+          setGalleryItems(galleryData);
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Supabase fetch error:', error);
       } finally {
         setIsLoading(false);
       }
@@ -84,10 +87,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
-      document.body.style.backgroundColor = THEME.colors.dark.background;
     } else {
       document.documentElement.classList.remove('dark');
-      document.body.style.backgroundColor = THEME.colors.background;
     }
   }, [isDark]);
 
