@@ -8,7 +8,7 @@ const AdminLoginPage: React.FC = () => {
   const { isAdminAuthenticated, setAdminAuthenticated } = useApp();
 
   const handleLogin = (password: string) => {
-    const securePassword = (window as any).process?.env?.ADMIN_PASSWORD || 'admin123';
+    const securePassword = process.env.ADMIN_PASSWORD;
     
     if (password === securePassword) {
       setAdminAuthenticated(true);

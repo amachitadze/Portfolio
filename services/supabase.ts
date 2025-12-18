@@ -1,17 +1,13 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// უსაფრთხო წაკითხვა ბრაუზერისთვის
-const getEnv = (key: string) => {
-  if (typeof process !== 'undefined' && process.env && process.env[key]) {
-    return process.env[key];
-  }
-  // Vercel-ისთვის და სხვა გარემოებისთვის
-  return (window as any).process?.env?.[key] || '';
-};
+// პირდაპირ process.env-ის გამოყენება, რადგან Vercel მას ავტომატურად აინექტირებს
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
 
-const supabaseUrl = getEnv('SUPABASE_URL');
-const supabaseAnonKey = getEnv('SUPABASE_ANON_KEY');
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn('Supabase credentials missing. Please check Vercel Environment Variables.');
+}
 
 export const supabase = createClient(
   supabaseUrl || 'https://placeholder.supabase.co',

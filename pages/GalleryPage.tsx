@@ -8,7 +8,7 @@ const GalleryPage: React.FC = () => {
   const [columns, setColumns] = useState<1 | 2>(2);
   
   const handleAuth = (password: string) => {
-    const securePassword = process.env.GALLERY_PASSWORD || 'gallery123';
+    const securePassword = process.env.GALLERY_PASSWORD;
     if (password === securePassword) { 
       setGalleryAuthenticated(true);
     } else {
@@ -33,7 +33,7 @@ const GalleryPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 p-6 md:p-12 lg:p-20">
+    <div className="min-h-screen bg-white dark:bg-[#0c0d0f] p-6 md:p-12 lg:p-20">
       <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end mb-24 gap-8">
         <div>
           <h2 className="text-[11px] font-black tracking-[0.4em] uppercase text-zinc-400 mb-6 opacity-60">04 — Work Process Gallery</h2>
@@ -68,7 +68,7 @@ const GalleryPage: React.FC = () => {
                   <h3 className="text-2xl md:text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">{item.projectTitle}</h3>
                   <span className="text-[10px] font-black uppercase tracking-widest text-zinc-300 dark:text-zinc-700 pt-2">{item.period}</span>
                 </div>
-                <p className="text-zinc-500 dark:text-zinc-400 text-base md:text-lg font-light leading-relaxed max-w-2xl line-clamp-2">{item.description}</p>
+                <p className="text-zinc-600 dark:text-zinc-400 text-base md:text-lg font-light leading-relaxed max-w-2xl line-clamp-2">{item.description}</p>
               </div>
             </div>
           ))}

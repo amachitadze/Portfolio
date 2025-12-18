@@ -7,13 +7,12 @@
     <title>Portfolio | Creative Director</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        window.process = { env: {} }; // ბრაუზერისთვის process.env-ის სიმულაცია შეცდომის თავიდან ასაცილებლად
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        'brand-black': '#32353f',
+                        'brand-black': '#1a1c22', // უფრო ღრმა შავი მკაფიოობისთვის
                     },
                     fontFamily: {
                         main: ['Inter', 'Noto Sans Georgian', 'sans-serif'],
@@ -33,66 +32,75 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Georgian:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+Georgian:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --font-main: 'Inter', 'Noto Sans Georgian', sans-serif;
         }
+        
+        /* ტექსტის მაქსიმალური მკაფიოობა */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            -webkit-text-size-adjust: 100%;
+        }
+
         body {
             font-family: var(--font-main);
             scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
             background-color: #ffffff;
-            color: #32353f;
+            color: #1a1c22;
+            overflow-x: hidden;
         }
+
+        .dark body {
+            background-color: #0c0d0f;
+            color: #f8fafc;
+        }
+
         .typewriter-cursor {
             display: inline-block;
-            width: 2px;
-            height: 1em;
+            width: 3px;
+            height: 1.1em;
             background-color: currentColor;
             margin-left: 4px;
             animation: blink 1s step-end infinite;
             vertical-align: middle;
         }
+        
         @keyframes blink {
           from, to { opacity: 1; }
           50% { opacity: 0; }
         }
-        ::-webkit-scrollbar {
-          width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-          background: #e2e8f0;
-          border-radius: 10px;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-          background: #334155;
-        }
+
         .glass-nav {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
         .dark .glass-nav {
-            background: rgba(26, 28, 34, 0.7);
+            background: rgba(12, 13, 15, 0.85);
+        }
+        
+        h1, h2, h3 {
+            letter-spacing: -0.02em;
         }
     </style>
-<script type="importmap">
+    <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
 </head>
-<body class="transition-colors duration-500 overflow-x-hidden">
+<body class="transition-colors duration-500">
     <div id="root"></div>
-    <!-- აუცილებელი სკრიპტის ჩატვირთვა -->
     <script type="module" src="./index.tsx"></script>
 </body>
 </html>

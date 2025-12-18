@@ -3,10 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Project } from '../types';
 import { useApp } from '../store/AppContext';
 
-const getImgBBKey = () => {
-  return (window as any).process?.env?.IMGBB_API_KEY || '';
-};
-
 interface AdminProjectFormProps {
   project?: Project | null;
   onClose: () => void;
@@ -41,7 +37,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
   };
 
   const uploadToImgBB = async (file: File) => {
-    const key = getImgBBKey();
+    const key = process.env.IMGBB_API_KEY;
     if (!key) {
       alert('ImgBB API Key is missing in Environment Variables');
       return { success: false };
