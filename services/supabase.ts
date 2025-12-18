@@ -1,11 +1,18 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
+// უსაფრთხო წაკითხვა ბრაუზერისთვის
+const getEnv = (key: string) => {
+  if (typeof process !== 'undefined' && process.env && process.env[key]) {
+    return process.env[key];
+  }
+  // Vercel-ისთვის და სხვა გარემოებისთვის
+  return (window as any).process?.env?.[key] || '';
+};
 
-// თუ ცვლადები აკლია, კლიენტი მაინც იქმნება Placeholder-ით, რომ აპი არ გაითიშოს, 
-// თუმცა მონაცემების წასაკითხად აუცილებელია Vercel-ში მათი გაწერა.
+const supabaseUrl = getEnv('SUPABASE_URL');
+const supabaseAnonKey = getEnv('SUPABASE_ANON_KEY');
+
 export const supabase = createClient(
   supabaseUrl || 'https://placeholder.supabase.co',
   supabaseAnonKey || 'placeholder-key'

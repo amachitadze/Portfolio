@@ -3,8 +3,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Project } from '../types';
 import { useApp } from '../store/AppContext';
 
-// API გასაღები იკითხება Vercel-ის Environment Variables-იდან
-const IMGBB_API_KEY = process.env.IMGBB_API_KEY || ''; 
+const getImgBBKey = () => {
+  return (window as any).process?.env?.IMGBB_API_KEY || '';
+};
 
 interface AdminProjectFormProps {
   project?: Project | null;
@@ -40,9 +41,14 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
   };
 
   const uploadToImgBB = async (file: File) => {
+    const key = getImgBBKey();
+    if (!key) {
+      alert('ImgBB API Key is missing in Environment Variables');
+      return { success: false };
+    }
     const uploadData = new FormData();
     uploadData.append('image', file);
-    const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+    const response = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
       method: 'POST',
       body: uploadData,
     });

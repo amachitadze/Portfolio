@@ -8,8 +8,7 @@ const AdminLoginPage: React.FC = () => {
   const { isAdminAuthenticated, setAdminAuthenticated } = useApp();
 
   const handleLogin = (password: string) => {
-    // პაროლის შედარება ხდება Vercel-ში გაწერილ ცვლადთან
-    const securePassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const securePassword = (window as any).process?.env?.ADMIN_PASSWORD || 'admin123';
     
     if (password === securePassword) {
       setAdminAuthenticated(true);
