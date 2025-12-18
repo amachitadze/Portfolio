@@ -12,19 +12,10 @@
             theme: {
                 extend: {
                     colors: {
-                        'brand-black': '#1a1c22', // უფრო ღრმა შავი მკაფიოობისთვის
+                        'brand-black': '#1a1c22',
                     },
                     fontFamily: {
                         main: ['Inter', 'Noto Sans Georgian', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-up': 'fadeUp 1s ease-out forwards',
-                    },
-                    keyframes: {
-                        fadeUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
                     }
                 }
             }
@@ -32,26 +23,24 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+Georgian:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Georgian:wght@100..900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --font-main: 'Inter', 'Noto Sans Georgian', sans-serif;
+            --font-main: "Inter", "Noto Sans Georgian", sans-serif;
         }
         
-        /* ტექსტის მაქსიმალური მკაფიოობა */
         * {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
-            -webkit-text-size-adjust: 100%;
+            font-optical-sizing: auto;
         }
 
         body {
             font-family: var(--font-main);
-            scroll-behavior: smooth;
             background-color: #ffffff;
             color: #1a1c22;
-            overflow-x: hidden;
+            line-height: 1.6;
         }
 
         .dark body {
@@ -79,12 +68,14 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
+        
         .dark .glass-nav {
             background: rgba(12, 13, 15, 0.85);
         }
-        
-        h1, h2, h3 {
+
+        h1, h2, h3, h4 {
             letter-spacing: -0.02em;
+            font-weight: 900;
         }
     </style>
     <script type="importmap">

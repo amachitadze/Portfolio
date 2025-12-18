@@ -3,9 +3,6 @@ import React, { useState, useRef } from 'react';
 import { GalleryItem } from '../types';
 import { useApp } from '../store/AppContext';
 
-// API გასაღები იკითხება Vercel-ის Environment Variables-იდან
-const IMGBB_API_KEY = process.env.IMGBB_API_KEY || '';
-
 interface AdminGalleryFormProps {
   item?: GalleryItem | null;
   onClose: () => void;
@@ -25,14 +22,15 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files || !IMGBB_API_KEY) return;
+    const apiKey = typeof process !== 'undefined' ? process.env.IMGBB_API_KEY : '';
+    if (!files || !apiKey) return;
     setIsUploading(true);
     const newImages = [...formData.images];
     for (let i = 0; i < files.length; i++) {
       const uploadData = new FormData();
       uploadData.append('image', files[i]);
       try {
-        const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
           method: 'POST',
           body: uploadData,
         });

@@ -8,9 +8,10 @@ const AdminLoginPage: React.FC = () => {
   const { isAdminAuthenticated, setAdminAuthenticated } = useApp();
 
   const handleLogin = (password: string) => {
-    const securePassword = process.env.ADMIN_PASSWORD;
+    // პირდაპირი მიმართვა სტატიკური ჩანაცვლებისთვის
+    const securePassword = typeof process !== 'undefined' ? process.env.ADMIN_PASSWORD : '';
     
-    if (password === securePassword) {
+    if (password === securePassword && securePassword !== '') {
       setAdminAuthenticated(true);
     } else {
       alert('არასწორი პაროლი!');

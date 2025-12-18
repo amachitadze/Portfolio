@@ -8,8 +8,10 @@ const GalleryPage: React.FC = () => {
   const [columns, setColumns] = useState<1 | 2>(2);
   
   const handleAuth = (password: string) => {
-    const securePassword = process.env.GALLERY_PASSWORD;
-    if (password === securePassword) { 
+    // პირდაპირი მიმართვა სტატიკური ჩანაცვლებისთვის
+    const securePassword = typeof process !== 'undefined' ? process.env.GALLERY_PASSWORD : '';
+    
+    if (password === securePassword && securePassword !== '') { 
       setGalleryAuthenticated(true);
     } else {
       alert('არასწორი პაროლი!');
@@ -58,7 +60,7 @@ const GalleryPage: React.FC = () => {
           {galleryItems.map(item => (
             <div key={item.id} className="group animate-in fade-in slide-in-from-bottom-8 duration-1000 cursor-pointer" onClick={() => handleItemClick(item)}>
               <div className={`aspect-[16/10] bg-zinc-50 dark:bg-zinc-900 rounded-[32px] overflow-hidden mb-10 relative border border-zinc-50 dark:border-zinc-900`}>
-                <img src={item.images[0]} className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out" />
+                <img src={item.images[0]} className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out" alt={item.projectTitle} />
                 <div className="absolute top-8 right-8 px-4 py-2 bg-black/20 backdrop-blur-xl rounded-full text-[10px] font-black text-white border border-white/20 uppercase tracking-widest">
                   {item.images.length} Photos
                 </div>

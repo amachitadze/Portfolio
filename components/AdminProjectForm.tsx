@@ -37,7 +37,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
   };
 
   const uploadToImgBB = async (file: File) => {
-    const key = process.env.IMGBB_API_KEY;
+    const key = typeof process !== 'undefined' ? process.env.IMGBB_API_KEY : '';
     if (!key) {
       alert('ImgBB API Key is missing in Environment Variables');
       return { success: false };
