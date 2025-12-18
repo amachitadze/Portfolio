@@ -12,10 +12,10 @@
             theme: {
                 extend: {
                     colors: {
-                        'brand-black': '#1a1c22',
+                        'brand-black': '#000000', // ბუნებრივი შავი
                     },
                     fontFamily: {
-                        main: ['Inter', 'Noto Sans Georgian', 'sans-serif'],
+                        main: ['Google Sans', 'sans-serif'],
                     }
                 }
             }
@@ -23,10 +23,12 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Georgian:wght@100..900&display=swap" rel="stylesheet">
+    <!-- ვინაიდან Google Sans ლიცენზირებული ფონტია, აქ ვიყენებთ Noto Sans Georgian-ს ქართული ტექსტისთვის, 
+         ხოლო ლათინური ნაწილისთვის აპლიკაცია შეეცდება გამოიყენოს სისტემური Google Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --font-main: "Inter", "Noto Sans Georgian", sans-serif;
+            --font-main: "Google Sans", "Noto Sans Georgian", sans-serif;
         }
         
         * {
@@ -34,26 +36,29 @@
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
             font-optical-sizing: auto;
+            /* ყველა ტექსტისთვის ერთიანი სისქის იძულება */
+            font-weight: 400 !important;
         }
 
         body {
             font-family: var(--font-main);
             background-color: #ffffff;
-            color: #1a1c22;
+            color: #000000;
             line-height: 1.6;
+            font-weight: 400;
         }
 
         .dark body {
             background-color: #0c0d0f;
-            color: #f8fafc;
+            color: #ffffff;
         }
 
         .typewriter-cursor {
             display: inline-block;
-            width: 3px;
-            height: 1.1em;
+            width: 2px;
+            height: 1em;
             background-color: currentColor;
-            margin-left: 4px;
+            margin-left: 2px;
             animation: blink 1s step-end infinite;
             vertical-align: middle;
         }
@@ -63,23 +68,17 @@
           50% { opacity: 0; }
         }
 
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-        
-        .dark .glass-nav {
-            background: rgba(12, 13, 15, 0.85);
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 400 !important;
+            letter-spacing: -0.02em;
+            color: #000000;
         }
 
-        h1, h2, h3, h4 {
-            letter-spacing: -0.02em;
-            font-weight: 900;
+        .dark h1, .dark h2, .dark h3, .dark h4 {
+            color: #ffffff;
         }
     </style>
     <script>
-      // პოლიფილი ReferenceError-ის თავიდან ასაცილებლად, თუ გარემო არ აწვდის process ობიექტს
       window.process = window.process || { env: {} };
     </script>
     <script type="importmap">
