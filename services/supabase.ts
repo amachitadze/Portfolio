@@ -1,12 +1,15 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// პირდაპირი მიმართვა აუცილებელია, რათა Build-ის დროს მოხდეს ტექსტის ჩანაცვლება
-const supabaseUrl = typeof process !== 'undefined' ? process.env.SUPABASE_URL : '';
-const supabaseAnonKey = typeof process !== 'undefined' ? process.env.SUPABASE_ANON_KEY : '';
+/**
+ * Supabase client configuration.
+ * Relies on the platform to inject process.env variables at runtime or build time.
+ */
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase credentials not found in process.env. Ensure they are set in Vercel/Environment Variables.');
+  console.error('CRITICAL: Supabase credentials missing from process.env.');
 }
 
 export const supabase = createClient(

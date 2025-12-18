@@ -8,10 +8,10 @@ const GalleryPage: React.FC = () => {
   const [columns, setColumns] = useState<1 | 2>(2);
   
   const handleAuth = (password: string) => {
-    // პირდაპირი მიმართვა სტატიკური ჩანაცვლებისთვის
-    const securePassword = typeof process !== 'undefined' ? process.env.GALLERY_PASSWORD : '';
+    // Direct access to environment variable for gallery authentication
+    const securePassword = process.env.GALLERY_PASSWORD;
     
-    if (password === securePassword && securePassword !== '') { 
+    if (password === securePassword && securePassword) { 
       setGalleryAuthenticated(true);
     } else {
       alert('არასწორი პაროლი!');
