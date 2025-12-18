@@ -78,6 +78,10 @@
             font-weight: 900;
         }
     </style>
+    <script>
+      // პოლიფილი ReferenceError-ის თავიდან ასაცილებლად, თუ გარემო არ აწვდის process ობიექტს
+      window.process = window.process || { env: {} };
+    </script>
     <script type="importmap">
 {
   "imports": {
