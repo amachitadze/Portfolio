@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useApp } from '../store/AppContext';
 
 interface AuthGateProps {
   title: string;
@@ -11,6 +12,7 @@ interface AuthGateProps {
 const AuthGate: React.FC<AuthGateProps> = ({ title, subtitle, onSuccess, onBack }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const { setView } = useApp();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,15 +22,14 @@ const AuthGate: React.FC<AuthGateProps> = ({ title, subtitle, onSuccess, onBack 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-white dark:bg-zinc-950 p-6 animate-in fade-in duration-700">
       <div className="w-full max-w-[380px] flex flex-col items-center">
-        {/* Lock Icon */}
         <div className="w-16 h-16 bg-zinc-50 dark:bg-zinc-900 rounded-[24px] flex items-center justify-center mb-10 border border-zinc-100 dark:border-zinc-800 shadow-sm">
           <svg className="w-7 h-7 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
         </div>
 
-        <h1 className="text-2xl font-black text-zinc-900 dark:text-zinc-50 mb-3 tracking-tight">{title}</h1>
-        <p className="text-zinc-400 dark:text-zinc-500 text-[13px] mb-12 font-bold uppercase tracking-widest">{subtitle}</p>
+        <h1 className="text-2xl font-black text-zinc-900 dark:text-zinc-50 mb-3 tracking-tight text-center">{title}</h1>
+        <p className="text-zinc-400 dark:text-zinc-500 text-[13px] mb-12 font-bold uppercase tracking-wider text-center">{subtitle}</p>
 
         <form onSubmit={handleSubmit} className="w-full space-y-4">
           <div className="relative">
@@ -55,18 +56,27 @@ const AuthGate: React.FC<AuthGateProps> = ({ title, subtitle, onSuccess, onBack 
 
           <button
             type="submit"
-            className="w-full py-5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-[20px] font-black text-[11px] uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="w-full py-5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-[20px] font-black text-[11px] uppercase tracking-wide shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
             Unlock Access
           </button>
         </form>
 
-        <button
-          onClick={onBack}
-          className="mt-12 text-[10px] font-black uppercase tracking-[0.4em] text-zinc-300 hover:text-zinc-600 dark:hover:text-zinc-100 transition-colors"
-        >
-          Return Home
-        </button>
+        <div className="mt-12 flex flex-col items-center gap-6">
+          <button 
+            onClick={() => setView('GALLERY')}
+            className="px-8 py-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-full text-[10px] font-black uppercase tracking-wide hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all active:scale-95"
+          >
+            View Work Process
+          </button>
+
+          <button
+            onClick={onBack}
+            className="text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:text-zinc-600 dark:hover:text-zinc-100 transition-colors"
+          >
+            Return Home
+          </button>
+        </div>
       </div>
     </div>
   );

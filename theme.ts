@@ -1,82 +1,59 @@
 
 /**
  * აპლიკაციის ვიზუალური თემის კონფიგურაცია.
- * აქ შეგიძლიათ შეცვალოთ ნებისმიერი ვიზუალური პარამეტრი მთელ საიტზე.
  */
 export const THEME = {
   colors: {
-    // ძირითადი ფერები
-    white: '#ffffff',           // სუფთა თეთრი ფონი
-    black: '#000000',           // ბუნებრივი შავი (აქ შეგიძლიათ შეცვალოთ ტექსტის და ელემენტების ფერი)
-    
-    // ფონის პარამეტრები
-    background: '#ffffff',      // საიტის მთავარი თეთრი ფონი
-    backgroundSecondary: '#f9f9fb', // სექციებს შორის გამოსაყოფი მკრთალი ფონი
-    cardBackground: '#ffffff',  // პროექტების და ბლოკების ბარათების ფონი
-    
-    // ტექსტის ფერები
-    textPrimary: '#000000',     // მთავარი ტექსტის ფერი (ბუნებრივი შავი)
-    textSecondary: '#64748b',   // ნაკლებად მნიშვნელოვანი ტექსტის ფერი (რუხი)
-    textMuted: '#94a3b8',       // მკრთალი ტექსტის ფერი (მაგ. თარიღებისთვის)
-    
-    // აქცენტები და ჩარჩოები
-    accent: '#10b981',          // აქცენტის ფერი (მაგ. მწვანე ინდიკატორი "Available for work")
-    border: '#e2e8f0',          // ჩარჩოების და გამყოფების ფერი
-    
-    // მუქი რეჟიმის (Dark Mode) პარამეტრები
+    white: '#ffffff',
+    black: '#000000',
+    background: '#ffffff',
+    backgroundSecondary: '#f9f9fb',
+    cardBackground: '#ffffff',
+    textPrimary: '#000000',
+    textSecondary: '#64748b',
+    textMuted: '#94a3b8',
+    accent: '#10b981',
+    border: '#e2e8f0',
     dark: {
-      background: '#0c0d0f',    // მუქი ფონი
-      backgroundSecondary: '#1a1c22', // მუქი მეორადი ფონი
-      cardBackground: '#1a1c22', // მუქი ბარათების ფონი
-      textPrimary: '#ffffff',    // მუქი რეჟიმის თეთრი ტექსტი
-      textSecondary: '#94a3b8',  // მუქი რეჟიმის რუხი ტექსტი
-      border: '#334155',         // მუქი რეჟიმის ჩარჩოები
+      background: '#0c0d0f',
+      backgroundSecondary: '#1a1c22',
+      cardBackground: '#1a1c22',
+      textPrimary: '#ffffff',
+      textSecondary: '#94a3b8',
+      border: '#334155',
     }
   },
 
-  /**
-   * ტიპოგრაფიის პარამეტრები.
-   * მომხმარებლის მოთხოვნით, ყველა სისქე (weight) არის ერთიანი (font-normal).
-   */
   typography: {
-    // მთავარი სათაური (Hero Section)
     heroTitle: {
-      size: 'text-5xl md:text-8xl lg:text-[110px]', // ზომა სხვადასხვა ეკრანისთვის
-      weight: 'font-normal',                         // სისქე (შეგიძლიათ შეცვალოთ font-light ან font-bold-ზე)
-      tracking: 'tracking-tighter',                  // ასოებს შორის დაშორება
-      leading: 'leading-[0.95]',                     // ხაზებს შორის დაშორება
+      size: 'text-5xl md:text-8xl lg:text-[110px]',
+      weight: 'font-normal',
+      tracking: 'tracking-tight',
+      leading: 'leading-[0.95]',
     },
-    // სექციების სათაურები
     sectionTitle: {
-      size: 'text-3xl md:text-5xl',                  // ზომა
-      weight: 'font-normal',                         // სისქე
-      tracking: 'tracking-tighter',                  // დაშორება
+      size: 'text-4xl md:text-6xl',
+      weight: 'font-normal',
+      tracking: 'tracking-tight',
     },
-    // ფუთერის დიდი სათაური
     footerTitle: {
-      size: 'text-6xl md:text-9xl',                  // ზომა
-      weight: 'font-normal',                         // სისქე
-      tracking: 'tracking-tighter',                  // დაშორება
+      size: 'text-6xl md:text-9xl',
+      weight: 'font-normal',
+      tracking: 'tracking-tight',
     },
-    // მცირე წარწერები (Labels)
     label: {
-      size: 'text-[10px]',                           // ზომა
-      weight: 'font-normal',                         // სისქე
-      tracking: 'tracking-[0.4em]',                  // დიდი დაშორება ასოებს შორის (Uppercase სტილისთვის)
+      size: 'text-[10px]',
+      weight: 'font-normal',
+      tracking: 'tracking-wider',
     },
-    // ძირითადი ტექსტი
     body: {
-      size: 'text-base md:text-lg',                  // ზომა
-      weight: 'font-normal',                         // სისქე
-      leading: 'leading-relaxed',                    // ხაზებს შორის დაშორება კომფორტული კითხვისთვის
+      size: 'text-base md:text-lg',
+      weight: 'font-normal',
+      leading: 'leading-relaxed',
     }
   },
 
-  /**
-   * ფონტების კონფიგურაცია.
-   * დატოვებულია მხოლოდ Google Sans მომხმარებლის მოთხოვნით.
-   */
   fonts: {
-    main: "'Google Sans', sans-serif", // მთავარი ფონტი მთელი საიტისთვის
+    main: "'Google Sans', sans-serif",
   }
 };

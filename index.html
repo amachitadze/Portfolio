@@ -3,8 +3,29 @@
 <html lang="ka">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Creative Director</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- SEO Meta Tags -->
+    <title>Portfolio | Creative Director & Product Designer</title>
+    <meta name="description" content="მულტიდისციპლინარული დიზაინერისა და დეველოპერის პორტფოლიო. აღმოაჩინეთ მინიმალისტური დიზაინი, პროდუქტის სტრატეგია და გამორჩეული ციფრული გამოცდილებები.">
+    <meta name="keywords" content="Portfolio, დიზაინერი, დეველოპერი, UI/UX Design, Product Design, Web Development, Minimalist Design, თბილისი">
+    <meta name="author" content="Creative Director">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Portfolio | Creative Director & Product Designer">
+    <meta property="og:description" content="აღმოაჩინეთ მინიმალისტური დიზაინი და გამორჩეული ციფრული გამოცდილებები.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://portfolio.example.com">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1470&auto=format&fit=crop">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Portfolio">
+    <link rel="apple-touch-icon" href="favicon.ico">
+    <link rel="manifest" href="./manifest.json">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,7 +33,7 @@
             theme: {
                 extend: {
                     colors: {
-                        'brand-black': '#000000', // ბუნებრივი შავი
+                        'brand-black': '#000000',
                     },
                     fontFamily: {
                         main: ['Google Sans', 'sans-serif'],
@@ -23,9 +44,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- ვინაიდან Google Sans ლიცენზირებული ფონტია, აქ ვიყენებთ Noto Sans Georgian-ს ქართული ტექსტისთვის, 
-         ხოლო ლათინური ნაწილისთვის აპლიკაცია შეეცდება გამოიყენოს სისტემური Google Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400&display=swap" rel="stylesheet">
     <style>
         :root {
             --font-main: "Google Sans", "Noto Sans Georgian", sans-serif;
@@ -35,9 +54,10 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
-            font-optical-sizing: auto;
-            /* ყველა ტექსტისთვის ერთიანი სისქის იძულება */
             font-weight: 400 !important;
+            -webkit-tap-highlight-color: transparent;
+            /* ბუნებრივი დაშორება ნაგულისხმევად */
+            letter-spacing: normal;
         }
 
         body {
@@ -45,12 +65,21 @@
             background-color: #ffffff;
             color: #000000;
             line-height: 1.6;
-            font-weight: 400;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         .dark body {
             background-color: #0c0d0f;
             color: #ffffff;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 400 !important;
+            letter-spacing: -0.01em; /* მცირე შევიწროება დიდი სათაურებისთვის */
+            color: inherit;
         }
 
         .typewriter-cursor {
@@ -68,18 +97,33 @@
           50% { opacity: 0; }
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 400 !important;
-            letter-spacing: -0.02em;
-            color: #000000;
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+        }
+        
+        .dark .glass-nav {
+            background: rgba(12, 13, 15, 0.85);
         }
 
-        .dark h1, .dark h2, .dark h3, .dark h4 {
-            color: #ffffff;
+        .snap-y {
+            scroll-behavior: smooth;
+        }
+
+        @media (max-width: 768px) {
+            .snap-y {
+                scroll-snap-type: none !important;
+            }
         }
     </style>
     <script>
       window.process = window.process || { env: {} };
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed:', err));
+        });
+      }
     </script>
     <script type="importmap">
 {
