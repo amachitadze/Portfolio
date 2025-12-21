@@ -14,7 +14,7 @@ export interface Project {
 }
 
 export interface Translation {
-  title: string;
+  titles: string[];
   subtitle: string;
   description: string;
   location: string;

@@ -2,16 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { Translation, Project } from '../../types';
 import { useApp } from '../../store/AppContext';
+import { THEME } from '../../theme';
 
-interface ProjectGridProps {
-  t: Translation;
-}
-
-const ProjectGrid: React.FC<ProjectGridProps> = ({ t }) => {
+/**
+ * 💼 პროექტების გალერეა (Selected Work)
+ * აქ ხდება ნამუშევრების სლაიდერის მართვა.
+ */
+const ProjectGrid: React.FC<{ t: Translation }> = ({ t }) => {
   const { setView, setSelectedProject, projects } = useApp();
+  const { colors } = THEME;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [projectsPerPage, setProjectsPerPage] = useState(4);
   
+  // 📱 რესპონსიულობის მართვა: მობილურზე ვაჩვენებთ ნაკლებ პროექტს ერთ გვერდზე
   useEffect(() => {
     const updateSize = () => {
       if (window.innerWidth < 768) {
@@ -37,23 +40,29 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ t }) => {
 
   if (!projects || projects.length === 0) return null;
 
+  /**
+   * 🕹️ ნავიგაციის ღილაკები
+   */
   const NavigationControls = ({ className = "" }: { className?: string }) => (
     <div className={`flex items-center gap-4 md:gap-6 ${className}`}>
       <button 
         onClick={handlePrev} 
         disabled={currentIndex === 0} 
-        className={`w-10 md:w-12 h-10 md:h-12 rounded-full border border-zinc-200 dark:border-zinc-800 flex items-center justify-center transition-all ${currentIndex === 0 ? 'opacity-20 cursor-not-allowed' : 'hover:bg-zinc-50 dark:hover:bg-zinc-900 text-brand-black dark:text-white active:scale-90 shadow-sm'}`}
+        className={`w-10 md:w-12 h-10 md:h-12 rounded-full border border-zinc-200 dark:border-zinc-800 flex items-center justify-center transition-all ${currentIndex === 0 ? 'opacity-20 cursor-not-allowed' : 'hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-90 shadow-sm'}`}
+        style={{ color: colors.black }}
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
       
+      {/* 📍 ინდიკატორები (Dots) */}
       <div className="flex items-center gap-2">
         {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
           <div 
             key={idx} 
-            className={`transition-all duration-500 ${currentIndex === idx ? 'w-6 md:w-8 h-1.5 md:h-2 bg-brand-black dark:bg-white rounded-full' : 'w-1.5 md:w-2 h-1.5 md:h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full'}`} 
+            className={`transition-all duration-500 ${currentIndex === idx ? 'w-6 md:w-8 h-1.5 md:h-2 rounded-full' : 'w-1.5 md:w-2 h-1.5 md:h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full'}`} 
+            style={currentIndex === idx ? { backgroundColor: colors.accent } : {}}
           />
         ))}
       </div>
@@ -61,7 +70,8 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ t }) => {
       <button 
         onClick={handleNext} 
         disabled={currentIndex === maxIndex} 
-        className={`w-10 md:w-12 h-10 md:h-12 rounded-full border border-zinc-200 dark:border-zinc-800 flex items-center justify-center transition-all ${currentIndex === maxIndex ? 'opacity-20 cursor-not-allowed' : 'hover:bg-zinc-50 dark:hover:bg-zinc-900 text-brand-black dark:text-white active:scale-90 shadow-sm'}`}
+        className={`w-10 md:w-12 h-10 md:h-12 rounded-full border border-zinc-200 dark:border-zinc-800 flex items-center justify-center transition-all ${currentIndex === maxIndex ? 'opacity-20 cursor-not-allowed' : 'hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-90 shadow-sm'}`}
+        style={{ color: colors.black }}
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
@@ -77,8 +87,11 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ t }) => {
           <h2 className="text-[10px] md:text-[11px] font-normal tracking-wider uppercase text-zinc-400 mb-4 opacity-60">
             03 — {t.selectedWork}
           </h2>
-          <h3 className="text-4xl md:text-6xl font-normal tracking-tight text-zinc-900 dark:text-zinc-50 leading-none">
-            Selected <br className="hidden md:block" /> Case Studies
+          <h3 
+            className="text-4xl md:text-6xl font-normal tracking-tight leading-none"
+            style={{ color: colors.black }}
+          >
+            რჩეული <br className="hidden md:block" /> ნამუშევრები
           </h3>
         </div>
         
@@ -94,6 +107,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ t }) => {
             <div key={pageIdx} className="min-w-full grid grid-cols-1 md:grid-cols-2 gap-x-10 md:gap-x-14 gap-y-12 md:gap-y-20">
               {projects.slice(pageIdx * projectsPerPage, (pageIdx + 1) * projectsPerPage).map((project) => (
                 <div key={project.id} className="group cursor-pointer" onClick={() => onProjectClick(project)}>
+                  {/* 🖼️ პროექტის სურათი */}
                   <div className="overflow-hidden rounded-[28px] md:rounded-[40px] bg-zinc-50 dark:bg-zinc-900 mb-6 md:mb-8 aspect-[16/10] relative border border-zinc-100 dark:border-zinc-800/50">
                     <img 
                       src={project.image} 
@@ -102,9 +116,13 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ t }) => {
                     />
                     <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500"></div>
                   </div>
+                  {/* 🏷️ პროექტის ტექსტური ნაწილი */}
                   <div className="flex justify-between items-start px-2 md:px-4">
                     <div className="max-w-[80%]">
-                      <h3 className="text-2xl md:text-3xl font-normal text-brand-black dark:text-zinc-50 mb-3 tracking-tight leading-tight">
+                      <h3 
+                        className="text-2xl md:text-3xl font-normal mb-3 tracking-tight leading-tight"
+                        style={{ color: colors.black }}
+                      >
                         {project.title}
                       </h3>
                       <div className="flex flex-wrap gap-x-4 gap-y-2">
@@ -115,7 +133,11 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ t }) => {
                         ))}
                       </div>
                     </div>
-                    <div className="w-10 md:w-14 h-10 md:h-14 rounded-full border border-zinc-100 dark:border-zinc-800 flex items-center justify-center group-hover:bg-brand-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-zinc-950 transition-all duration-500 shadow-sm">
+                    {/* 🏹 ისარი აქცენტის ფერით */}
+                    <div 
+                      className="w-10 md:w-14 h-10 md:h-14 rounded-full border border-zinc-100 dark:border-zinc-800 flex items-center justify-center transition-all duration-500 shadow-sm group-hover:text-white"
+                      style={{ borderColor: colors.accent }}
+                    >
                       <svg className="w-4 md:w-5 h-4 md:h-5 -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
@@ -128,7 +150,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ t }) => {
         </div>
       </div>
 
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center mt-4 md:hidden">
         <NavigationControls />
       </div>
     </section>

@@ -2,17 +2,16 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 /**
- * Supabase კონფიგურაცია.
- * 
- * თუ Vercel-ზე გარემოს ცვლადები არ მუშაობს, ეს ნიშნავს რომ ისინი არ არის დამატებული 
- * Vercel Dashboard-ში (Settings -> Environment Variables).
- * 
- * ყურადღება: SUPABASE_URL უნდა იწყებოდეს https://-ით.
+ * 🛠 Supabase კონფიგურაცია
+ * მონაცემთა ბაზასთან კავშირის დასამყარებლად საჭიროა URL და API გასაღები.
  */
-const supabaseUrl = process.env.SUPABASE_URL || 'https://your-project-id.supabase.co';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'your-anon-key-placeholder';
+const supabaseUrl = process.env.SUPABASE_URL || 'https://your-project.supabase.co';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'your-key';
 
-// ვამოწმებთ არის თუ არა URL ვალიდური ფორმატის
+/**
+ * 🛡 ვალიდაცია: ვამოწმებთ არის თუ არა URL სწორი ფორმატის.
+ * თუ URL არასწორია, აპლიკაცია არ გაითიშება და გამოიყენებს placeholder-ს.
+ */
 const isValidUrl = (url: string) => {
   try {
     new URL(url);
@@ -22,15 +21,10 @@ const isValidUrl = (url: string) => {
   }
 };
 
-if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
-  console.warn("Supabase-ის რეალური გასაღებები ვერ მოიძებნა. მონაცემების შენახვა არ იმუშავებს.");
-}
-
 /**
- * Supabase კლიენტის ინიციალიზაცია.
- * ვიყენებთ placeholder-ს თუ URL არასწორია, რომ აპლიკაცია არ გაითიშოს.
+ * 🚀 Supabase კლიენტის ინიციალიზაცია
  */
 export const supabase = createClient(
-  isValidUrl(supabaseUrl) ? supabaseUrl : 'https://placeholder-only.supabase.co',
+  isValidUrl(supabaseUrl) ? supabaseUrl : 'https://placeholder.supabase.co',
   supabaseAnonKey
 );

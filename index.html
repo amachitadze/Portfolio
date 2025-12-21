@@ -4,28 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <!-- SEO Meta Tags -->
-    <title>Portfolio | Creative Director & Product Designer</title>
-    <meta name="description" content="მულტიდისციპლინარული დიზაინერისა და დეველოპერის პორტფოლიო. აღმოაჩინეთ მინიმალისტური დიზაინი, პროდუქტის სტრატეგია და გამორჩეული ციფრული გამოცდილებები.">
-    <meta name="keywords" content="Portfolio, დიზაინერი, დეველოპერი, UI/UX Design, Product Design, Web Development, Minimalist Design, თბილისი">
-    <meta name="author" content="Creative Director">
-    
-    <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="Portfolio | Creative Director & Product Designer">
-    <meta property="og:description" content="აღმოაჩინეთ მინიმალისტური დიზაინი და გამორჩეული ციფრული გამოცდილებები.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://portfolio.example.com">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1470&auto=format&fit=crop">
-
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Portfolio">
-    <link rel="apple-touch-icon" href="favicon.ico">
-    <link rel="manifest" href="./manifest.json">
-
+    <title>პორტფოლიო | კრეატიული დიზაინი და დეველოპმენტი</title>
+    <meta name="description" content="პროფესიონალური პორტფოლიო ვებსაიტი შექმნილი მაღალი სტანდარტებით.">
+    <link rel="icon" href="favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -33,112 +14,56 @@
             theme: {
                 extend: {
                     colors: {
-                        'brand-black': '#000000',
-                    },
-                    fontFamily: {
-                        main: ['Google Sans', 'sans-serif'],
+                        'brand-black': '#32353F',
+                        'brand-accent': '#FFC93C',
                     }
                 }
             }
         }
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --font-main: "Google Sans", "Noto Sans Georgian", sans-serif;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&display=swap');
         
-        * {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-            font-weight: 400 !important;
-            -webkit-tap-highlight-color: transparent;
-            /* ბუნებრივი დაშორება ნაგულისხმევად */
-            letter-spacing: normal;
-        }
-
         body {
-            font-family: var(--font-main);
+            font-family: 'Google Sans', 'Noto Sans Georgian', sans-serif;
             background-color: #ffffff;
-            color: #000000;
-            line-height: 1.6;
+            color: #32353F;
             margin: 0;
-            padding: 0;
             overflow-x: hidden;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .dark body {
-            background-color: #0c0d0f;
-            color: #ffffff;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 400 !important;
-            letter-spacing: -0.01em; /* მცირე შევიწროება დიდი სათაურებისთვის */
-            color: inherit;
+            -webkit-font-smoothing: antialiased;
         }
 
         .typewriter-cursor {
             display: inline-block;
             width: 2px;
-            height: 1em;
-            background-color: currentColor;
-            margin-left: 2px;
-            animation: blink 1s step-end infinite;
+            height: 0.85em;
+            margin-left: 3px;
+            animation: blink 0.8s step-end infinite;
             vertical-align: middle;
         }
-        
+
         @keyframes blink {
-          from, to { opacity: 1; }
-          50% { opacity: 0; }
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
         }
 
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-        }
-        
-        .dark .glass-nav {
-            background: rgba(12, 13, 15, 0.85);
-        }
-
-        .snap-y {
-            scroll-behavior: smooth;
-        }
-
-        @media (max-width: 768px) {
-            .snap-y {
-                scroll-snap-type: none !important;
-            }
+        .py-4\.5 {
+            padding-top: 1.125rem;
+            padding-bottom: 1.125rem;
         }
     </style>
-    <script>
-      window.process = window.process || { env: {} };
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed:', err));
-        });
-      }
-    </script>
-    <script type="importmap">
+<script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@19.0.0",
-    "react-dom": "https://esm.sh/react-dom@19.0.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
 </head>
-<body class="transition-colors duration-500">
+<body>
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
+    <script type="module" src="index.tsx"></script>
 </body>
 </html>

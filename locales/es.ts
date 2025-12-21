@@ -1,7 +1,12 @@
+
 import { Translation } from '../types';
 
 export const es: Translation = {
-  title: 'Construyo experiencias',
+  titles: [
+    'Construyo experiencias', // Frase 1
+    'Diseño innovaciones',    // Frase 2
+    'Creo el futuro'          // Frase 3
+  ],
   subtitle: 'DISEÑADOR DE PRODUCTOS & DESARROLLADOR',
   description: 'Soy un profesional creativo apasionado por crear experiencias digitales excepcionales que combinan un diseño hermoso con una funcionalidad potente.',
   location: 'Madrid, ES',

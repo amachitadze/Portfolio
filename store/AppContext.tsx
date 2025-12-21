@@ -1,38 +1,35 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Language, View, Project, GalleryItem } from '../types';
-import { THEME } from '../theme';
 import { supabase } from '../services/supabase';
 import { PROJECTS, INITIAL_GALLERY_ITEMS } from '../constants';
 
+/**
+ * 🧠 აპლიკაციის გლობალური მდგომარეობის (State) ინტერფეისი
+ */
 interface AppState {
-  lang: Language;
+  lang: Language;                           // მიმდინარე ენა
   setLang: (lang: Language) => void;
-  isDark: boolean;
+  isDark: boolean;                         // მუქი თემა
   toggleDark: () => void;
-  view: View;
+  view: View;                               // მიმდინარე გვერდი
   setView: (view: View) => void;
-  selectedProject: Project | null;
+  selectedProject: Project | null;          // არჩეული პროექტი დეტალებისთვის
   setSelectedProject: (p: Project | null) => void;
   selectedGalleryItem: GalleryItem | null;
   setSelectedGalleryItem: (item: GalleryItem | null) => void;
-  isAdminAuthenticated: boolean;
+  isAdminAuthenticated: boolean;            // ადმინის ავტორიზაცია
   setAdminAuthenticated: (val: boolean) => void;
-  isGalleryAuthenticated: boolean;
-  setGalleryAuthenticated: (val: boolean) => void;
-  projects: Project[];
-  addProject: (p: Project) => Promise<void>;
-  updateProject: (p: Project) => Promise<void>;
-  deleteProject: (id: number) => Promise<void>;
-  galleryItems: GalleryItem[];
-  addGalleryItem: (item: GalleryItem) => Promise<void>;
-  updateGalleryItem: (item: GalleryItem) => Promise<void>;
-  deleteGalleryItem: (id: number) => Promise<void>;
-  isLoading: boolean;
+  projects: Project[];                      // პროექტების სია
+  galleryItems: GalleryItem[];              // პროცესების სია
+  isLoading: boolean;                       // დატვირთვის სტატუსი
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
 
+/**
+ * 🏗 AppProvider - აწვდის მონაცემებს მთელ აპლიკაციას
+ */
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [lang, setLang] = useState<Language>('GEO');
   const [isDark, setIsDark] = useState(false);
@@ -40,35 +37,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   
-  // ვიწყებთ საწყისი მონაცემებით constants.ts-იდან
   const [projects, setProjects] = useState<Project[]>(PROJECTS);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(INITIAL_GALLERY_ITEMS);
   const [isLoading, setIsLoading] = useState(true);
   
+  // ავტორიზაციის შემოწმება localStorage-დან
   const [isAdminAuthenticated, setAdminAuthenticated] = useState<boolean>(() => {
     return localStorage.getItem('isAdmin') === 'true';
   });
 
-  const [isGalleryAuthenticated, setGalleryAuthenticated] = useState<boolean>(() => {
-    return sessionStorage.getItem('isGalleryAuth') === 'true';
-  });
-
+  /**
+   * 🔄 მონაცემების წამოღება Supabase-დან
+   */
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const { data: projectsData, error: pError } = await supabase.from('projects').select('*').order('id', { ascending: false });
-        const { data: galleryData, error: gError } = await supabase.from('gallery_items').select('*').order('id', { ascending: false });
+        const { data: projectsData } = await supabase.from('projects').select('*').order('id', { ascending: false });
+        const { data: galleryData } = await supabase.from('gallery_items').select('*').order('id', { ascending: false });
         
-        // თუ ბაზა წარმატებით დაუკავშირდა და მონაცემები არსებობს, ვანაცვლებთ საწყისებს
-        if (projectsData && projectsData.length > 0) {
-          setProjects(projectsData);
-        }
-        if (galleryData && galleryData.length > 0) {
-          setGalleryItems(galleryData);
-        }
+        if (projectsData?.length) setProjects(projectsData);
+        if (galleryData?.length) setGalleryItems(galleryData);
       } catch (error) {
-        console.error('Supabase fetch error:', error);
+        console.error('Fetch error:', error);
       } finally {
         setIsLoading(false);
       }
@@ -76,14 +67,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     fetchData();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('isAdmin', isAdminAuthenticated.toString());
-  }, [isAdminAuthenticated]);
-
-  useEffect(() => {
-    sessionStorage.setItem('isGalleryAuth', isGalleryAuthenticated.toString());
-  }, [isGalleryAuthenticated]);
-
+  // თემის ცვლილების ასახვა HTML კლასზე
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
@@ -92,52 +76,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [isDark]);
 
-  const addProject = async (p: Project) => {
-    const { error } = await supabase.from('projects').insert([p]);
-    if (!error) setProjects([p, ...projects]);
-  };
-
-  const updateProject = async (p: Project) => {
-    const { error } = await supabase.from('projects').update(p).eq('id', p.id);
-    if (!error) setProjects(projects.map(item => item.id === p.id ? p : item));
-  };
-
-  const deleteProject = async (id: number) => {
-    const { error } = await supabase.from('projects').delete().eq('id', id);
-    if (!error) setProjects(projects.filter(p => p.id !== id));
-  };
-
-  const addGalleryItem = async (item: GalleryItem) => {
-    const { error } = await supabase.from('gallery_items').insert([item]);
-    if (!error) setGalleryItems([item, ...galleryItems]);
-  };
-
-  const updateGalleryItem = async (item: GalleryItem) => {
-    const { error } = await supabase.from('gallery_items').update(item).eq('id', item.id);
-    if (!error) setGalleryItems(galleryItems.map(i => i.id === item.id ? item : i));
-  };
-
-  const deleteGalleryItem = async (id: number) => {
-    const { error } = await supabase.from('gallery_items').delete().eq('id', id);
-    if (!error) setGalleryItems(galleryItems.filter(i => i.id !== id));
-  };
-
   return (
     <AppContext.Provider value={{ 
       lang, setLang, isDark, toggleDark: () => setIsDark(!isDark), 
       view, setView, selectedProject, setSelectedProject,
       selectedGalleryItem, setSelectedGalleryItem,
       isAdminAuthenticated, setAdminAuthenticated,
-      isGalleryAuthenticated, setGalleryAuthenticated,
-      projects, addProject, updateProject, deleteProject,
-      galleryItems, addGalleryItem, updateGalleryItem, deleteGalleryItem,
-      isLoading
+      projects, galleryItems, isLoading
     }}>
       {children}
     </AppContext.Provider>
   );
 };
 
+/**
+ * 🎣 Custom Hook აპლიკაციის მდგომარეობის გამოსაყენებლად
+ */
 export const useApp = () => {
   const context = useContext(AppContext);
   if (!context) throw new Error('useApp must be used within AppProvider');

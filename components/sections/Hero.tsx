@@ -4,71 +4,113 @@ import { Translation } from '../../types';
 import { LocationIcon, ArrowRightIcon } from '../Icons';
 import { THEME } from '../../theme';
 
+/**
+ * ⚙️ კონფიგურაცია
+ * USE_ANIMATION: true - ჩართავს ბეჭდვის ეფექტს
+ * USE_ANIMATION: false - ტექსტი იქნება სტატიკური (მხოლოდ პირველი ფრაზა)
+ */
+const USE_ANIMATION = false; 
+
+const TYPEWRITER_CONFIG = {
+  typingSpeed: 60,
+  deletingSpeed: 30,
+  pauseBeforeDelete: 3000,
+  pauseBeforeNext: 800
+};
+
 const Hero: React.FC<{ t: Translation }> = ({ t }) => {
   const [displayText, setDisplayText] = useState('');
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { typography, colors } = THEME;
 
   useEffect(() => {
-    let i = 0;
-    setDisplayText('');
-    const timer = setInterval(() => {
-      setDisplayText(t.title.slice(0, i));
-      i++;
-      if (i > t.title.length) clearInterval(timer);
-    }, 50);
-    return () => clearInterval(timer);
-  }, [t.title]);
+    // თუ ანიმაცია გამორთულია, პირდაპირ ვაყენებთ პირველ სათაურს
+    if (!USE_ANIMATION) {
+      setDisplayText(t.titles[0]);
+      return;
+    }
+
+    const currentFullText = t.titles[phraseIndex % t.titles.length];
+    
+    const handleTyping = () => {
+      if (!isDeleting) {
+        const nextText = currentFullText.slice(0, displayText.length + 1);
+        setDisplayText(nextText);
+        if (displayText === currentFullText) {
+          setTimeout(() => setIsDeleting(true), TYPEWRITER_CONFIG.pauseBeforeDelete);
+          return;
+        }
+      } else {
+        const nextText = currentFullText.slice(0, displayText.length - 1);
+        setDisplayText(nextText);
+        if (displayText === '') {
+          setIsDeleting(false);
+          setPhraseIndex((prev) => prev + 1);
+          return;
+        }
+      }
+    };
+
+    let currentSpeed = isDeleting ? TYPEWRITER_CONFIG.deletingSpeed : TYPEWRITER_CONFIG.typingSpeed;
+    if (!isDeleting && displayText === '') currentSpeed = TYPEWRITER_CONFIG.pauseBeforeNext;
+
+    const timer = setTimeout(handleTyping, currentSpeed);
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, phraseIndex, t.titles]);
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section className="snap-start min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20 md:pt-0 relative overflow-hidden bg-white dark:bg-[#1a1c22]">
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20 dark:opacity-10">
-        <div className="absolute top-1/4 left-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-zinc-200 dark:bg-zinc-800 rounded-full blur-[80px] md:blur-[120px]"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-zinc-100 dark:bg-zinc-700 rounded-full blur-[70px] md:blur-[100px]"></div>
-      </div>
-
-      <div className="relative z-10 max-w-6xl animate-fade-up px-2">
-        <span className={`${typography.label.size} ${typography.label.weight} ${typography.label.tracking} uppercase text-zinc-400 mb-6 md:mb-8 block antialiased`}>
+    <section className="snap-start min-h-screen flex flex-col items-center justify-center text-center px-6 relative overflow-hidden bg-white dark:bg-zinc-950">
+      <div className="relative z-10 max-w-5xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
+        {/* ზედა მცირე წარწერა - დახვეწილი დაშორებით */}
+        <span className={`${typography.label.size} ${typography.label.weight} ${typography.label.tracking} uppercase text-zinc-400 mb-8 block antialiased`}>
           {t.subtitle}
         </span>
         
-        <h1 className={`${typography.heroTitle.size} ${typography.heroTitle.weight} ${typography.heroTitle.tracking} ${typography.heroTitle.leading} mb-8 md:mb-12 text-brand-black dark:text-zinc-50 break-words`}>
+        {/* მთავარი სათაური */}
+        <h1 
+          className={`${typography.heroTitle.size} ${typography.heroTitle.weight} ${typography.heroTitle.tracking} ${typography.heroTitle.leading} mb-12 min-h-[1.1em] transition-colors`}
+          style={{ color: colors.black }}
+        >
           {displayText}
-          <span className="typewriter-cursor"></span>
+          {USE_ANIMATION && (
+            <span className="typewriter-cursor" style={{ backgroundColor: colors.accent }}></span>
+          )}
         </h1>
 
-        <p className="max-w-2xl text-zinc-500 dark:text-zinc-400 mb-10 md:mb-14 font-light text-base md:text-xl leading-relaxed mx-auto antialiased">
+        {/* აღწერა */}
+        <p className="max-w-2xl text-zinc-400 dark:text-zinc-500 mb-14 text-base md:text-lg font-light leading-relaxed mx-auto antialiased">
           {t.description}
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-12 md:mb-16 text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-zinc-400">
-           <div className="flex items-center gap-2 md:gap-3">
-             <LocationIcon className="w-3.5 md:w-4 h-3.5 md:h-4" />
-             {t.location}
+        {/* სტატუსი და მდებარეობა - შემცირებული tracking */}
+        <div className="flex flex-wrap items-center justify-center gap-10 mb-16 text-[10px] font-bold uppercase tracking-[0.1em] text-zinc-300">
+           <div className="flex items-center gap-2.5">
+             <LocationIcon className="w-3.5 h-3.5" /> {t.location}
            </div>
-           <div className="flex items-center gap-2 md:gap-3">
-             <span className="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full" style={{ backgroundColor: colors.accent }}></span>
+           <div className="flex items-center gap-2.5">
+             <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: colors.accent }}></span>
              {t.status}
            </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6">
+        <div className="flex flex-col sm:flex-row justify-center gap-5">
           <button 
             onClick={() => scrollToSection('work')}
-            className="group px-8 md:px-10 py-4 md:py-5 bg-brand-black dark:bg-zinc-50 text-white dark:text-brand-black rounded-[16px] md:rounded-[18px] text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 shadow-xl w-full sm:w-auto"
+            className="group px-9 py-4 text-white rounded-[16px] text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 shadow-lg"
+            style={{ backgroundColor: colors.black }}
           >
             {t.viewWork}
-            <ArrowRightIcon className="w-3.5 md:w-4 h-3.5 md:h-4 transition-transform group-hover:translate-x-1" />
+            <ArrowRightIcon className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
           </button>
           <button 
             onClick={() => scrollToSection('contact')}
-            className="px-8 md:px-10 py-4 md:py-5 bg-transparent border border-zinc-200 dark:border-zinc-800 rounded-[16px] md:rounded-[18px] text-[10px] md:text-[11px] font-black uppercase tracking-widest text-brand-black dark:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all w-full sm:w-auto"
+            className="px-9 py-4 bg-transparent border border-zinc-200 dark:border-zinc-800 rounded-[16px] text-[10px] font-black uppercase tracking-widest transition-all hover:bg-zinc-50 dark:hover:bg-zinc-900"
+            style={{ color: colors.black }}
           >
             {t.getInTouch}
           </button>

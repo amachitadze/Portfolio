@@ -1,7 +1,12 @@
+
 import { Translation } from '../types';
 
 export const en: Translation = {
-  title: 'I build experiences',
+  titles: [
+    'I build experiences',    // Phrase 1
+    'I design innovations',   // Phrase 2
+    'I code the future'       // Phrase 3
+  ],
   subtitle: 'PRODUCT DESIGNER & DEVELOPER',
   description: 'I am a creative professional passionate about creating exceptional digital experiences that combine beautiful design with powerful functionality.',
   location: 'London, UK',
