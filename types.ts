@@ -23,70 +23,40 @@ export interface GalleryItem {
   tags?: string[];
 }
 
-export interface LogoAsset {
-  id: string;
-  title: string;
-  description: string;
-  pngUrl: string;
-  svgUrl: string;
-}
-
-export interface FontAsset {
-  id: string;
-  name: string;
-  url: string;
-  sampleText?: string;
-}
-
-export interface BrandColor {
-  id: string;
-  name: string;
-  hex: string;
-  rgb?: string;
-  description: string;
-}
-
-export interface BrandPattern {
-  id: string;
-  title: string;
-  imageUrl: string;
-}
-
 export interface BioLink {
   id: string;
   title: string;
   url: string;
-  icon: string; // 'portfolio' | 'behance' | 'dribbble' | 'instagram' | 'linkedin' | 'link' etc.
-}
-
-export interface BrandStrategy {
-  brandName: string;
-  slogan: string;
-  whoIsBrand: string;
-  brandDriver: string;
-  brandMission: string;
-  brandValues: string;
-  brandPersonification: string;
-  brandUniqueness: string;
-  brandCategory: string;
-  brandPromise: string;
-  archetype: string;
-  purpose: string;
-  goal: string;
-  detailedManualUrl: string;
+  icon: string;
 }
 
 export interface BrandData {
-  logos: LogoAsset[];
+  logos: any[];
   logoRules: string;
-  fonts: FontAsset[];
-  colors: BrandColor[];
-  patterns: BrandPattern[];
-  strategy: BrandStrategy;
+  fonts: any[];
+  colors: any[];
+  patterns: any[];
+  strategy: {
+    brandName: string;
+    slogan: string;
+    whoIsBrand: string;
+    brandDriver: string;
+    brandMission: string;
+    brandValues: string;
+    brandPersonification: string;
+    brandUniqueness: string;
+    brandCategory: string;
+    brandPromise: string;
+    archetype?: string;
+    purpose?: string;
+    goal?: string;
+    detailedManualUrl?: string;
+  };
   bio: {
     name: string;
     role: string;
-    links: BioLink[];
+    socials: BioLink[]; // პატარა იკონები (მარცხნივ)
+    links: BioLink[];   // დიდი Bento ღილაკები (მარჯვნივ)
   };
 }
 

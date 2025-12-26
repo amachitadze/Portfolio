@@ -35,6 +35,7 @@ interface AppState {
 
 const AppContext = createContext<AppState | undefined>(undefined);
 
+// ბრენდის მონაცემების საწყისი მნიშვნელობა, დამატებულია bio ველი შეცდომის გამოსასწორებლად
 const INITIAL_BRAND_DATA: BrandData = {
   logos: [],
   logoRules: '',
@@ -60,6 +61,7 @@ const INITIAL_BRAND_DATA: BrandData = {
   bio: {
     name: '',
     role: '',
+    socials: [],
     links: []
   }
 };
@@ -97,10 +99,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
         if (projectsData) setProjects(projectsData);
         if (galleryData) setGalleryItems(galleryData);
-        if (brandConfig?.data) {
-           // გაერთიანება, რომ ახალი ველები Bio-სთვის არ დაიკარგოს
-           setBrandData({ ...INITIAL_BRAND_DATA, ...brandConfig.data });
-        }
+        if (brandConfig?.data) setBrandData({ ...INITIAL_BRAND_DATA, ...brandConfig.data });
       } catch (error) {
         console.error('Fetch error:', error);
       } finally {
