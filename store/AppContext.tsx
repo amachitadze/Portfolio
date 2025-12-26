@@ -1,5 +1,6 @@
 
-import { createContext, useContext, useState, useEffect } from 'react';
+// React იმპორტი დამატებულია React.FC და React.ReactNode ტიპების გამოსაყენებლად
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Language, View, Project, GalleryItem, BrandData } from '../types';
 import { supabase } from '../services/supabase';
 import { PROJECTS } from '../constants';
