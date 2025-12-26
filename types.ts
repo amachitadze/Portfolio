@@ -52,6 +52,13 @@ export interface BrandPattern {
   imageUrl: string;
 }
 
+export interface BioLink {
+  id: string;
+  title: string;
+  url: string;
+  icon: string; // 'portfolio' | 'behance' | 'dribbble' | 'instagram' | 'linkedin' | 'link' etc.
+}
+
 export interface BrandStrategy {
   brandName: string;
   slogan: string;
@@ -76,6 +83,11 @@ export interface BrandData {
   colors: BrandColor[];
   patterns: BrandPattern[];
   strategy: BrandStrategy;
+  bio: {
+    name: string;
+    role: string;
+    links: BioLink[];
+  };
 }
 
 export interface Translation {

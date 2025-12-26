@@ -56,6 +56,11 @@ const INITIAL_BRAND_DATA: BrandData = {
     purpose: '',
     goal: '',
     detailedManualUrl: ''
+  },
+  bio: {
+    name: '',
+    role: '',
+    links: []
   }
 };
 
@@ -92,7 +97,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
         if (projectsData) setProjects(projectsData);
         if (galleryData) setGalleryItems(galleryData);
-        if (brandConfig?.data) setBrandData({ ...INITIAL_BRAND_DATA, ...brandConfig.data });
+        if (brandConfig?.data) {
+           // გაერთიანება, რომ ახალი ველები Bio-სთვის არ დაიკარგოს
+           setBrandData({ ...INITIAL_BRAND_DATA, ...brandConfig.data });
+        }
       } catch (error) {
         console.error('Fetch error:', error);
       } finally {

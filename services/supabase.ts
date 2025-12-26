@@ -1,25 +1,22 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-/**
- * ⚠️ მნიშვნელოვანი: Vite-ში გარემო ცვლადები უნდა ეწეროს სტატიკურად, 
- * რომ build-ის დროს მოხდეს მათი ტექსტური ჩანაცვლება.
- */
-// გასწორება: TypeScript-ის შეცდომა 'env' თვისებაზე
-const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY || '';
+// უსაფრთხო წაკითხვა, რომ import.meta.env-ის არარსებობამ არ გათიშოს აპლიკაცია
+const getEnv = (key: string) => {
+  try {
+    return (import.meta as any).env?.[key] || '';
+  } catch {
+    return '';
+  }
+};
+
+const supabaseUrl = getEnv('VITE_SUPABASE_URL');
+const supabaseAnonKey = getEnv('VITE_SUPABASE_ANON_KEY');
 
 const isConfigured = 
   supabaseUrl && 
   supabaseAnonKey && 
-  supabaseUrl.startsWith('https://') &&
-  !supabaseUrl.includes('placeholder');
-
-if (!isConfigured) {
-  console.group('🚨 SUPABASE CONFIGURATION ERROR');
-  console.error('ცვლადები ვერ ჩაინაცვლა. დარწმუნდით, რომ Vercel-ში VITE_SUPABASE_URL და VITE_SUPABASE_ANON_KEY სწორადაა.');
-  console.groupEnd();
-}
+  supabaseUrl.startsWith('https://');
 
 export const supabase = createClient(
   isConfigured ? supabaseUrl : 'https://placeholder.supabase.co',
