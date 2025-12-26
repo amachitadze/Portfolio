@@ -37,10 +37,12 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
   };
 
   const uploadToImgBB = async (file: File) => {
-    // უზრუნველვყოფთ, რომ process.env ყოველთვის შემოწმდეს
-    const key = process.env.IMGBB_API_KEY;
+    // @ts-ignore
+    const key = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_IMGBB_API_KEY) || 
+                (typeof process !== 'undefined' && (process.env?.VITE_IMGBB_API_KEY || process.env?.IMGBB_API_KEY));
+    
     if (!key) {
-      alert('ImgBB API Key ვერ მოიძებნა Vercel-ის ცვლადებში.');
+      alert('ImgBB API Key ვერ მოიძებნა. დარწმუნდით, რომ Vercel-ში ცვლადს ჰქვია VITE_IMGBB_API_KEY.');
       return { success: false };
     }
     const uploadData = new FormData();
@@ -64,7 +66,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
     if (result.success) {
       setFormData({ ...formData, image: result.data.url });
     } else {
-      alert('ატვირთვა ვერ მოხერხდა. შეამოწმეთ IMGBB_API_KEY Vercel-ში.');
+      alert('ატვირთვა ვერ მოხერხდა. შეამოწმეთ VITE_IMGBB_API_KEY.');
     }
     setIsCoverUploading(false);
   };

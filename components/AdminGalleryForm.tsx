@@ -21,11 +21,22 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
     tags: item?.tags?.join(', ') || '',
   });
 
+  const getImgBBKey = () => {
+    // @ts-ignore
+    const metaKey = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_IMGBB_API_KEY);
+    // @ts-ignore
+    const procKey = (typeof process !== 'undefined' && ((process as any).env?.VITE_IMGBB_API_KEY || (process as any).env?.IMGBB_API_KEY));
+    // @ts-ignore
+    const winKey = (typeof window !== 'undefined' && ((window as any).process?.env?.VITE_IMGBB_API_KEY || (window as any).process?.env?.IMGBB_API_KEY));
+    return metaKey || procKey || winKey;
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    const apiKey = process.env.IMGBB_API_KEY;
+    const apiKey = getImgBBKey();
+    
     if (!files || !apiKey) {
-      if (!apiKey) alert('IMGBB_API_KEY არ არის გაწერილი Vercel-ში.');
+      if (!apiKey) alert('IMGBB_API_KEY არ არის გაწერილი Vercel-ში. დარწმუნდით რომ გაწერილია VITE_IMGBB_API_KEY სახელით Settings -> Environment Variables-ში.');
       return;
     }
     setIsUploading(true);

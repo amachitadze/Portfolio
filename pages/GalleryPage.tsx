@@ -2,19 +2,19 @@
 import React, { useState } from 'react';
 import { useApp } from '../store/AppContext';
 import AuthGate from '../components/AuthGate';
+import { getEnv } from '../services/supabase';
 
 const GalleryPage: React.FC = () => {
   const { galleryItems, setView, isGalleryAuthenticated, setGalleryAuthenticated, setSelectedGalleryItem, isLoading } = useApp();
   const [columns, setColumns] = useState<1 | 2>(2);
   
   const handleAuth = (password: string) => {
-    // მხოლოდ გარემოს ცვლადი
-    const securePassword = process.env.GALLERY_PASSWORD;
+    const securePassword = getEnv('GALLERY_PASSWORD');
     
     if (securePassword && password === securePassword) { 
       setGalleryAuthenticated(true);
     } else {
-      alert('არასწორი პაროლი! შეამოწმეთ GALLERY_PASSWORD ცვლადი Vercel-ში.');
+      alert('არასწორი პაროლი! შეამოწმეთ VITE_GALLERY_PASSWORD ცვლადი Vercel-ში და გააკეთეთ Redeploy.');
     }
   };
 
