@@ -72,15 +72,16 @@ const ProjectGrid: React.FC<{ t: Translation }> = ({ t }) => {
   return (
     <section id="work" className="snap-start min-h-screen py-24 md:py-32 px-4 md:px-12 flex flex-col justify-center max-w-7xl mx-auto relative overflow-hidden bg-white dark:bg-[#0c0d0f]">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-8">
-        <div>
+        <div className="flex-1">
           <h2 className="text-[10px] md:text-[11px] font-normal tracking-wider uppercase text-zinc-400 mb-4 opacity-60">
             03 — {t.selectedWork}
           </h2>
+          {/* აქ წაიშალა <br /> რომ ტექსტი იყოს ერთ ხაზზე */}
           <h3 
-            className="text-4xl md:text-6xl font-normal tracking-tight leading-none"
+            className="text-4xl md:text-6xl font-black tracking-tight leading-none whitespace-nowrap"
             style={{ color: colors.black }}
           >
-            რჩეული <br className="hidden md:block" /> ნამუშევრები
+            {t.selectedWork}
           </h3>
         </div>
         
@@ -116,7 +117,7 @@ const ProjectGrid: React.FC<{ t: Translation }> = ({ t }) => {
                     <div className="flex justify-between items-start px-2 md:px-4">
                       <div className="max-w-[80%]">
                         <h3 
-                          className="text-2xl md:text-3xl font-normal mb-3 tracking-tight leading-tight"
+                          className="text-2xl md:text-3xl font-black mb-3 tracking-tight leading-tight"
                           style={{ color: colors.black }}
                         >
                           {project.title}
