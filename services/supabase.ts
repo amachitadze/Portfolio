@@ -1,17 +1,13 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// 🛠️ პირდაპირი მიმართვა Vite-ს გარემო ცვლადებზე
-// Vite ამას build-ის დროს რეალური მნიშვნელობით ჩაანაცვლებს
-const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
-
-// დამხმარე ფუნქცია სხვა ცვლადებისთვის (მაგ: პაროლები)
-export const getEnv = (name: string): string => {
-  const meta = (import.meta as any);
-  // ვამოწმებთ ორივე ვარიანტს: სახელით და VITE_ პრეფიქსით
-  return meta.env?.[`VITE_${name}`] || meta.env?.[name] || '';
-};
+/**
+ * ⚠️ მნიშვნელოვანი: Vite-ში გარემო ცვლადები უნდა ეწეროს სტატიკურად, 
+ * რომ build-ის დროს მოხდეს მათი ტექსტური ჩანაცვლება.
+ */
+// გასწორება: TypeScript-ის შეცდომა 'env' თვისებაზე
+const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY || '';
 
 const isConfigured = 
   supabaseUrl && 
@@ -21,9 +17,7 @@ const isConfigured =
 
 if (!isConfigured) {
   console.group('🚨 SUPABASE CONFIGURATION ERROR');
-  console.error('ცვლადები ვერ მოიძებნა. დარწმუნდით, რომ Vercel-ში გაწერილია VITE_SUPABASE_URL და VITE_SUPABASE_ANON_KEY');
-  console.info('URL:', supabaseUrl ? '✅ OK' : '❌ MISSING');
-  console.info('KEY:', supabaseAnonKey ? '✅ OK' : '❌ MISSING');
+  console.error('ცვლადები ვერ ჩაინაცვლა. დარწმუნდით, რომ Vercel-ში VITE_SUPABASE_URL და VITE_SUPABASE_ANON_KEY სწორადაა.');
   console.groupEnd();
 }
 

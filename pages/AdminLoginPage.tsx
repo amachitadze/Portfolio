@@ -8,8 +8,9 @@ const AdminLoginPage: React.FC = () => {
   const { isAdminAuthenticated, setAdminAuthenticated } = useApp();
 
   const handleLogin = (password: string) => {
-    // პირდაპირი მიმართვა Vite ცვლადზე
-    const securePassword = (import.meta as any).env?.VITE_ADMIN_PASSWORD;
+    // სტატიკური მიმართვა, რომ Vite-მა Build-ისას ჩაანაცვლოს
+    // გასწორება: TypeScript-ის შეცდომა 'env' თვისებაზე ImportMeta-ში
+    const securePassword = (import.meta as any).env.VITE_ADMIN_PASSWORD;
     
     if (securePassword && password === securePassword) {
       setAdminAuthenticated(true);

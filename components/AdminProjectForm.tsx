@@ -37,11 +37,9 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
   };
 
   const uploadToImgBB = async (file: File) => {
-    // პირდაპირი მიმართვა Vite-ს ცვლადზე
-    const key = (import.meta as any).env?.VITE_IMGBB_API_KEY;
-    
+    const key = (import.meta as any).env.VITE_IMGBB_API_KEY;
     if (!key) {
-      alert('VITE_IMGBB_API_KEY ვერ მოიძებნა. დარწმუნდით, რომ Redeploy გააკეთეთ ვერსელზე.');
+      alert('VITE_IMGBB_API_KEY ვერ მოიძებნა Vercel-ის ცვლადებში!');
       return { success: false };
     }
     const uploadData = new FormData();
@@ -83,16 +81,21 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newProject: Project = {
-      id: project?.id || Date.now(),
+    const projectData: any = {
       title: formData.title,
       image: formData.image,
-      tags: formData.tags.split(',').map(tag => tag.trim()),
+      tags: formData.tags.split(',').map(tag => tag.trim()).filter(t => t !== ''),
       year: formData.year,
       client: formData.client,
       content: editorRef.current?.innerHTML || '',
     };
-    project ? await updateProject(newProject) : await addProject(newProject);
+    
+    // თუ რედაქტირებაა, ID-ს ვტოვებთ, თუ ახალია - ბაზა თავად მიანიჭებს
+    if (project) {
+      await updateProject({ ...projectData, id: project.id });
+    } else {
+      await addProject(projectData);
+    }
     onClose();
   };
 

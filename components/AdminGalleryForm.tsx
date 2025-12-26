@@ -18,40 +18,33 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
     description: item?.description || '',
     period: item?.period || '',
     images: item?.images || [] as string[],
-    tags: item?.tags?.join(', ') || '',
+    tags: item?.tags?.join(', ') || ''
   });
 
-  const getImgBBKey = () => {
-    // @ts-ignore
-    const metaKey = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_IMGBB_API_KEY);
-    // @ts-ignore
-    const procKey = (typeof process !== 'undefined' && ((process as any).env?.VITE_IMGBB_API_KEY || (process as any).env?.IMGBB_API_KEY));
-    // @ts-ignore
-    const winKey = (typeof window !== 'undefined' && ((window as any).process?.env?.VITE_IMGBB_API_KEY || (window as any).process?.env?.IMGBB_API_KEY));
-    return metaKey || procKey || winKey;
+  const uploadToImgBB = async (file: File) => {
+    const key = (import.meta as any).env.VITE_IMGBB_API_KEY;
+    if (!key) return { success: false };
+    const uploadData = new FormData();
+    uploadData.append('image', file);
+    try {
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
+        method: 'POST',
+        body: uploadData,
+      });
+      return await response.json();
+    } catch (err) {
+      return { success: false };
+    }
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    const apiKey = getImgBBKey();
-    
-    if (!files || !apiKey) {
-      if (!apiKey) alert('IMGBB_API_KEY არ არის გაწერილი Vercel-ში. დარწმუნდით რომ გაწერილია VITE_IMGBB_API_KEY სახელით Settings -> Environment Variables-ში.');
-      return;
-    }
+    if (!files) return;
     setIsUploading(true);
     const newImages = [...formData.images];
     for (let i = 0; i < files.length; i++) {
-      const uploadData = new FormData();
-      uploadData.append('image', files[i]);
-      try {
-        const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-          method: 'POST',
-          body: uploadData,
-        });
-        const result = await response.json();
-        if (result.success) newImages.push(result.data.url);
-      } catch (err) { console.error(err); }
+      const result = await uploadToImgBB(files[i]);
+      if (result.success) newImages.push(result.data.url);
     }
     setFormData({ ...formData, images: newImages });
     setIsUploading(false);
@@ -59,15 +52,19 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newItem: GalleryItem = {
-      id: item?.id || Date.now(),
+    const itemData: any = {
       projectTitle: formData.projectTitle,
       description: formData.description,
       period: formData.period,
       images: formData.images,
-      tags: formData.tags.split(',').map(t => t.trim()).filter(t => t !== ''),
+      tags: formData.tags.split(',').map(t => t.trim()).filter(t => t !== '')
     };
-    item ? await updateGalleryItem(newItem) : await addGalleryItem(newItem);
+    
+    if (item) {
+      await updateGalleryItem({ ...itemData, id: item.id });
+    } else {
+      await addGalleryItem(itemData);
+    }
     onClose();
   };
 
@@ -95,11 +92,10 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-8">
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase text-zinc-400 tracking-widest">Tags (use 'profile' to show on Brand Page)</label>
-              <input value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 p-4 rounded-xl outline-none" placeholder="profile, lifestyle, branding" />
-            </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase text-zinc-400 tracking-widest">Tags (comma separated)</label>
+            <input value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 p-4 rounded-xl outline-none" placeholder="profile, mobile, design" />
+            <p className="text-[10px] text-zinc-400">ბრენდბუქში გამოსაჩენად ჩაწერეთ: profile</p>
           </div>
 
           <div className="space-y-2">

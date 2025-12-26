@@ -8,7 +8,8 @@ const GalleryPage: React.FC = () => {
   const [columns, setColumns] = useState<1 | 2>(2);
   
   const handleAuth = (password: string) => {
-    const securePassword = (import.meta as any).env?.VITE_GALLERY_PASSWORD;
+    // გასწორება: TypeScript-ის შეცდომა 'env' თვისებაზე
+    const securePassword = (import.meta as any).env.VITE_GALLERY_PASSWORD;
     
     if (securePassword && password === securePassword) { 
       setGalleryAuthenticated(true);

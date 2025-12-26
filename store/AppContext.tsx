@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { Language, View, Project, GalleryItem, BrandData } from '../types';
 import { supabase } from '../services/supabase';
 import { PROJECTS, INITIAL_GALLERY_ITEMS } from '../constants';
@@ -54,7 +54,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   
   const [projects, setProjects] = useState<Project[]>(PROJECTS);
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(INITIAL_GALLERY_ITEMS);
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [brandData, setBrandData] = useState<BrandData>(INITIAL_BRAND_DATA);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -75,10 +75,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const { data: projectsData } = await supabase.from('projects').select('*').order('id', { ascending: false });
         const { data: galleryData } = await supabase.from('gallery_items').select('*').order('id', { ascending: false });
-        const { data: brandConfig } = await supabase.from('brand_config').select('data').single();
+        const { data: brandConfig } = await supabase.from('brand_config').select('data').eq('id', 1).single();
         
-        if (projectsData?.length) setProjects(projectsData);
-        if (galleryData?.length) setGalleryItems(galleryData);
+        if (projectsData) setProjects(projectsData);
+        if (galleryData) setGalleryItems(galleryData);
         if (brandConfig?.data) setBrandData(brandConfig.data);
       } catch (error) {
         console.error('Fetch error:', error);
@@ -90,13 +90,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   const addProject = async (p: Project) => {
-    const { data, error } = await supabase.from('projects').insert(p).select();
-    if (!error && data) setProjects([data[0], ...projects]);
+    const { id, ...projectData } = p;
+    const { data, error } = await supabase.from('projects').insert([projectData]).select();
+    if (error) alert('Error: ' + error.message);
+    else if (data) setProjects([data[0], ...projects]);
   };
 
   const updateProject = async (p: Project) => {
     const { error } = await supabase.from('projects').update(p).eq('id', p.id);
-    if (!error) setProjects(projects.map(proj => proj.id === p.id ? p : proj));
+    if (error) alert('Error: ' + error.message);
+    else setProjects(projects.map(proj => proj.id === p.id ? p : proj));
   };
 
   const deleteProject = async (id: number) => {
@@ -105,13 +108,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addGalleryItem = async (item: GalleryItem) => {
-    const { data, error } = await supabase.from('gallery_items').insert(item).select();
-    if (!error && data) setGalleryItems([data[0], ...galleryItems]);
+    const { id, ...payload } = item;
+    const { data, error } = await supabase.from('gallery_items').insert([payload]).select();
+    if (error) {
+      alert('ბაზაში შენახვის შეცდომა: ' + error.message + '\nდარწმუნდით რომ tags სვეტი არსებობს!');
+    } else if (data) {
+      setGalleryItems([data[0], ...galleryItems]);
+    }
   };
 
   const updateGalleryItem = async (item: GalleryItem) => {
-    const { error } = await supabase.from('gallery_items').update(item).eq('id', item.id);
-    if (!error) setGalleryItems(galleryItems.map(gi => gi.id === item.id ? item : gi));
+    const { id, ...payload } = item;
+    const { error } = await supabase.from('gallery_items').update(payload).eq('id', item.id);
+    if (error) alert('Error: ' + error.message);
+    else setGalleryItems(galleryItems.map(gi => gi.id === item.id ? item : gi));
   };
 
   const deleteGalleryItem = async (id: number) => {
@@ -121,7 +131,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const saveBrandData = async (data: BrandData) => {
     const { error } = await supabase.from('brand_config').upsert({ id: 1, data });
-    if (!error) setBrandData(data);
+    if (error) alert('Error: ' + error.message);
+    else setBrandData(data);
   };
 
   useEffect(() => {
