@@ -99,11 +99,12 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="space-y-20 pb-40 max-w-5xl mx-auto animate-in fade-in duration-500">
+    <div className="space-y-20 pb-40 max-w-5xl mx-auto animate-in fade-in duration-500 font-sans">
       
       {/* 📋 Section 1: Brand Strategy */}
       <section className="space-y-8 bg-zinc-50 dark:bg-zinc-900/50 p-10 rounded-[32px] border border-zinc-100 dark:border-zinc-800">
         <h2 className="text-xl font-black uppercase tracking-widest text-zinc-400">ბრენდის სტრატეგია</h2>
+        <p className="text-[10px] text-zinc-400 italic">მინიშნება: გამოიყენეთ Enter ახალი ხაზისთვის (სიებისათვის).</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-zinc-400">1. ბრენდის სახელი და სლოგანი</label>
@@ -114,7 +115,7 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-zinc-400">2. ვინ არის ბრენდი</label>
-            <input value={data.strategy.whoIsBrand} onChange={e => updateStrategy('whoIsBrand', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" placeholder="აღწერეთ ბრენდის არსი" />
+            <textarea value={data.strategy.whoIsBrand} onChange={e => updateStrategy('whoIsBrand', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm min-h-[80px]" placeholder="აღწერეთ ბრენდის არსი" />
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-zinc-400">3. ბრენდის მამოძრავებელი</label>
@@ -122,15 +123,15 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-zinc-400">4. ბრენდის მისია</label>
-            <input value={data.strategy.brandMission} onChange={e => updateStrategy('brandMission', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" />
+            <textarea value={data.strategy.brandMission} onChange={e => updateStrategy('brandMission', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm min-h-[80px]" />
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-zinc-400">5. ბრენდის ფასეულობები</label>
-            <input value={data.strategy.brandValues} onChange={e => updateStrategy('brandValues', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" />
+            <textarea value={data.strategy.brandValues} onChange={e => updateStrategy('brandValues', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm min-h-[80px]" />
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-zinc-400">6. ბრენდის პერსონიფიკაცია</label>
-            <input value={data.strategy.brandPersonification} onChange={e => updateStrategy('brandPersonification', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" />
+            <textarea value={data.strategy.brandPersonification} onChange={e => updateStrategy('brandPersonification', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm min-h-[80px]" />
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-zinc-400">7. ბრენდის ერთადერთობა</label>
@@ -140,9 +141,13 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
             <label className="text-[10px] font-bold uppercase text-zinc-400">8. ბრენდის კატეგორია</label>
             <input value={data.strategy.brandCategory} onChange={e => updateStrategy('brandCategory', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" />
           </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase text-zinc-400">9. ბრენდის არქეტიპი</label>
+            <input value={data.strategy.archetype} onChange={e => updateStrategy('archetype', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" />
+          </div>
           <div className="md:col-span-2 space-y-2">
-            <label className="text-[10px] font-bold uppercase text-zinc-400">9. ბრენდის დაპირება</label>
-            <input value={data.strategy.brandPromise} onChange={e => updateStrategy('brandPromise', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" />
+            <label className="text-[10px] font-bold uppercase text-zinc-400">10. ბრენდის დაპირება</label>
+            <textarea value={data.strategy.brandPromise} onChange={e => updateStrategy('brandPromise', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm min-h-[60px]" />
           </div>
         </div>
       </section>

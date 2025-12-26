@@ -1,9 +1,88 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApp } from '../store/AppContext';
 import { SunIcon, MoonIcon, LinkIcon, DocumentIcon, ArrowRightIcon } from '../components/Icons';
 import { TRANSLATIONS } from '../constants';
 import { THEME } from '../theme';
+
+// ColorCard კომპონენტის პროპსების ტიპების განსაზღვრა
+interface ColorCardProps {
+  color: any;
+}
+
+// ColorCard კომპონენტი, რომელიც იყენებს React.FC-ს 'key' პროპსის მხარდასაჭერად
+const ColorCard: React.FC<ColorCardProps> = ({ color }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  const hexToRgb = (hex: string) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `RGB(${r}, ${g}, ${b})`;
+  };
+
+  const hexToCss = (hex: string) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, 1)`;
+  };
+
+  const hexToHsl = (hex: string) => {
+    let r = parseInt(hex.slice(1, 3), 16) / 255;
+    let g = parseInt(hex.slice(3, 5), 16) / 255;
+    let b = parseInt(hex.slice(5, 7), 16) / 255;
+    let max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0, l = (max + min) / 2;
+    if (max !== min) {
+      let d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    return `HSL ${Math.round(h * 360)} ${Math.round(s * 100)} ${Math.round(l * 100)} / 100%`;
+  };
+
+  return (
+    <div className="group font-sans">
+      <div className="aspect-square rounded-[32px] mb-6 shadow-sm border border-zinc-100 dark:border-zinc-800 transition-transform group-hover:scale-[1.02]" style={{ backgroundColor: color.hex }} />
+      <h3 className="font-bold mb-2 text-lg">{color.name}</h3>
+      
+      <div className="space-y-1.5 mb-4">
+        <div className="flex justify-between text-[10px] font-mono text-zinc-400">
+          <span>HEX</span> <span>{color.hex.toUpperCase()}</span>
+        </div>
+        <div className="flex justify-between text-[10px] font-mono text-zinc-400">
+          <span>RGB</span> <span>{hexToRgb(color.hex)}</span>
+        </div>
+        <div className="flex justify-between text-[10px] font-mono text-zinc-400">
+          <span>CSS</span> <span>{hexToCss(color.hex)}</span>
+        </div>
+        <div className="flex justify-between text-[10px] font-mono text-zinc-400">
+          <span>HSL</span> <span>{hexToHsl(color.hex)}</span>
+        </div>
+      </div>
+
+      <div className="relative">
+        <p className={`text-xs text-zinc-500 leading-relaxed ${!isExpanded ? 'line-clamp-2' : ''}`}>
+          {color.description}
+        </p>
+        {color.description?.length > 60 && (
+          <button 
+            onClick={() => setIsExpanded(!isExpanded)} 
+            className="text-[10px] font-bold text-zinc-900 dark:text-zinc-100 uppercase mt-2 hover:underline"
+          >
+            {isExpanded ? 'ნაკლების ნახვა' : 'დეტალურად'}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const BrandPage: React.FC = () => {
   const { setView, isDark, toggleDark, lang, isAdminAuthenticated, brandData, galleryItems, setSelectedGalleryItem } = useApp();
@@ -18,35 +97,36 @@ const BrandPage: React.FC = () => {
     return () => { document.head.removeChild(meta); };
   }, []);
 
-  // Filter gallery items with 'profile' tag
   const profileItems = galleryItems.filter(item => item.tags?.includes('profile'));
 
-  const handleDownload = (url: string, filename: string) => {
+  const handleDownload = async (url: string, filename: string) => {
     if (!url) return;
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (e) {
+      // Fallback
+      window.open(url, '_blank');
+    }
   };
 
   const copyToClipboard = (url: string) => {
     if (!url) return;
     navigator.clipboard.writeText(url);
-    alert('Link copied!');
+    alert('ლინკი კოპირებულია!');
   };
 
   const onProfileClick = (item: any) => {
     setSelectedGalleryItem(item);
     setView('GALLERY_DETAIL');
-  };
-
-  const hexToRgb = (hex: string) => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `RGB(${r}, ${g}, ${b})`;
   };
 
   return (
@@ -89,32 +169,44 @@ const BrandPage: React.FC = () => {
           <div className="space-y-12">
             <div>
               <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6">ვინ არის ბრენდი</h2>
-              <p className="text-2xl font-light leading-relaxed">{brandData.strategy.whoIsBrand}</p>
+              <p className="text-2xl font-light leading-relaxed whitespace-pre-line">{brandData.strategy.whoIsBrand}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-8 py-8 border-y border-zinc-100 dark:border-zinc-900">
+              <div className="space-y-2">
+                <span className="text-[9px] font-black uppercase text-zinc-300">არქეტიპი</span>
+                <p className="font-bold">{brandData.strategy.archetype}</p>
+              </div>
+              <div className="space-y-2">
+                <span className="text-[9px] font-black uppercase text-zinc-300">პერსონა</span>
+                <p className="font-bold">{brandData.strategy.brandPersonification}</p>
+              </div>
             </div>
             <div>
               <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6">მისია და დაპირება</h2>
-              <p className="text-lg text-zinc-500 leading-relaxed">{brandData.strategy.brandMission}</p>
+              <p className="text-lg text-zinc-500 leading-relaxed whitespace-pre-line">{brandData.strategy.brandMission}</p>
               <div className="mt-6 p-6 bg-zinc-50 dark:bg-zinc-900 rounded-2xl border-l-4 border-zinc-900 dark:border-white">
-                <p className="font-bold italic">"{brandData.strategy.brandPromise}"</p>
+                <p className="font-bold italic whitespace-pre-line">"{brandData.strategy.brandPromise}"</p>
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-2">
-              <span className="text-[9px] font-black uppercase text-zinc-300">კატეგორია</span>
-              <p className="font-bold">{brandData.strategy.brandCategory}</p>
+          <div className="space-y-12">
+            <div className="grid grid-cols-2 gap-8">
+              <div className="space-y-2">
+                <span className="text-[9px] font-black uppercase text-zinc-300">კატეგორია</span>
+                <p className="font-bold">{brandData.strategy.brandCategory}</p>
+              </div>
+              <div className="space-y-2">
+                <span className="text-[9px] font-black uppercase text-zinc-300">მამოძრავებელი</span>
+                <p className="font-bold">{brandData.strategy.brandDriver}</p>
+              </div>
+              <div className="space-y-2">
+                <span className="text-[9px] font-black uppercase text-zinc-300">ერთადერთობა</span>
+                <p className="font-bold">{brandData.strategy.brandUniqueness}</p>
+              </div>
             </div>
-            <div className="space-y-2">
-              <span className="text-[9px] font-black uppercase text-zinc-300">არქეტიპი</span>
-              <p className="font-bold">{brandData.strategy.archetype}</p>
-            </div>
-            <div className="space-y-2">
-              <span className="text-[9px] font-black uppercase text-zinc-300">მამოძრავებელი</span>
-              <p className="font-bold">{brandData.strategy.brandDriver}</p>
-            </div>
-            <div className="space-y-2">
-              <span className="text-[9px] font-black uppercase text-zinc-300">ერთადერთობა</span>
-              <p className="font-bold">{brandData.strategy.brandUniqueness}</p>
+            <div>
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6">ფასეულობები</h2>
+              <p className="text-lg text-zinc-500 leading-relaxed whitespace-pre-line">{brandData.strategy.brandValues}</p>
             </div>
           </div>
         </section>
@@ -122,16 +214,9 @@ const BrandPage: React.FC = () => {
         {/* 🎨 Colors Section */}
         <section>
           <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-16">ფერების სისტემა</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-16">
             {brandData.colors?.map(color => (
-              <div key={color.id} className="group">
-                <div className="aspect-square rounded-[32px] mb-6 shadow-sm border border-zinc-100 dark:border-zinc-800 transition-transform group-hover:scale-[1.02]" style={{ backgroundColor: color.hex }} />
-                <h3 className="font-bold mb-1">{color.name}</h3>
-                <div className="text-[10px] font-mono uppercase text-zinc-400 space-y-1">
-                  <p>{color.hex}</p>
-                  <p>{hexToRgb(color.hex)}</p>
-                </div>
-              </div>
+              <ColorCard key={color.id} color={color} />
             ))}
           </div>
         </section>
@@ -142,11 +227,42 @@ const BrandPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
               {brandData.logos.map(logo => (
-                <div key={logo.id} className="p-10 bg-zinc-50 dark:bg-zinc-900 rounded-[32px] flex items-center justify-center aspect-square relative group overflow-hidden">
+                <div key={logo.id} className="p-10 bg-zinc-50 dark:bg-zinc-900 rounded-[32px] flex items-center justify-center aspect-square relative group overflow-hidden border border-zinc-50 dark:border-zinc-900">
                   <img src={logo.pngUrl || logo.svgUrl} className="max-w-[70%] max-h-[70%] object-contain group-hover:scale-110 transition-transform duration-700" alt={logo.title} />
-                  <div className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                    <button onClick={() => copyToClipboard(logo.svgUrl)} className="flex-1 py-2 bg-white dark:bg-zinc-800 rounded-lg text-[8px] font-black uppercase">Copy SVG</button>
-                    <button onClick={() => handleDownload(logo.pngUrl, 'logo.png')} className="flex-1 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-lg text-[8px] font-black uppercase">PNG</button>
+                  
+                  {/* Floating Action Buttons */}
+                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3">
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => handleDownload(logo.pngUrl, 'logo.png')} 
+                        className="px-4 py-2 bg-zinc-900 text-white rounded-lg text-[8px] font-black uppercase hover:scale-105 active:scale-95 transition-all"
+                      >
+                        PNG Download
+                      </button>
+                      <button 
+                        onClick={() => copyToClipboard(logo.pngUrl)} 
+                        className="px-4 py-2 bg-zinc-900 text-white rounded-lg text-[8px] font-black uppercase hover:scale-105 active:scale-95 transition-all"
+                      >
+                        PNG Copy
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => handleDownload(logo.svgUrl, 'logo.svg')} 
+                        className="px-4 py-2 bg-white text-zinc-900 rounded-lg text-[8px] font-black uppercase shadow-lg hover:scale-105 active:scale-95 transition-all"
+                      >
+                        SVG Download
+                      </button>
+                      <button 
+                        onClick={() => copyToClipboard(logo.svgUrl)} 
+                        className="px-4 py-2 bg-white text-zinc-900 rounded-lg text-[8px] font-black uppercase shadow-lg hover:scale-105 active:scale-95 transition-all"
+                      >
+                        SVG Copy
+                      </button>
+                    </div>
+                  </div>
+                  <div className="absolute top-6 left-6 text-[10px] font-black uppercase tracking-widest text-zinc-300">
+                    {logo.title}
                   </div>
                 </div>
               ))}
@@ -154,11 +270,6 @@ const BrandPage: React.FC = () => {
             <div className="space-y-8">
               <h3 className="text-xl font-bold">გამოყენების წესები</h3>
               <p className="text-zinc-500 leading-relaxed whitespace-pre-line">{brandData.logoRules}</p>
-              <div className="pt-8 border-t border-zinc-100 dark:border-zinc-900">
-                <h3 className="text-[10px] font-black uppercase text-zinc-400 mb-6">ფასეულობები და პერსონა</h3>
-                <p className="text-sm italic text-zinc-400 mb-4">{brandData.strategy.brandValues}</p>
-                <p className="text-sm font-bold">{brandData.strategy.brandPersonification}</p>
-              </div>
             </div>
           </div>
         </section>
@@ -166,13 +277,13 @@ const BrandPage: React.FC = () => {
         {/* 👤 Profile/Lifestyle 9:16 Carousel */}
         {profileItems.length > 0 && (
           <section>
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-16">ბრენდის ვიზუალური სტილი (9:16)</h2>
+            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-16">ბრენდის ვიზუალური სტილი</h2>
             <div className="flex gap-6 overflow-x-auto pb-10 snap-x no-scrollbar">
               {profileItems.map((item) => (
                 <div 
                   key={item.id} 
                   onClick={() => onProfileClick(item)}
-                  className="min-w-[200px] md:min-w-[280px] aspect-[9/16] rounded-[32px] overflow-hidden relative group cursor-pointer snap-center shadow-2xl"
+                  className="h-[380px] w-auto aspect-[9/16] rounded-[32px] overflow-hidden relative group cursor-pointer snap-center shadow-2xl flex-shrink-0"
                 >
                   <img src={item.images[0]} className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0" alt={item.projectTitle} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
@@ -203,7 +314,7 @@ const BrandPage: React.FC = () => {
               <div className="space-y-12">
                 {brandData.fonts.map(font => (
                   <div key={font.id}>
-                    <p className="text-4xl md:text-5xl mb-4" style={{ fontFamily: font.name }}>{font.name}</p>
+                    <p className="text-4xl md:text-5xl mb-4" style={{ fontFamily: "'Google Sans', sans-serif" }}>{font.name}</p>
                     <p className="text-zinc-400 text-sm mb-6 leading-relaxed">{font.sampleText || 'Abcdefghijklmnopqrstuvwxyz 0123456789'}</p>
                     <a href={font.url} target="_blank" className="inline-flex items-center gap-2 text-[8px] font-black uppercase tracking-widest border-b border-zinc-900 dark:border-white pb-1">ჩამოტვირთვა <LinkIcon className="w-3 h-3" /></a>
                   </div>
