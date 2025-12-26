@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Translation } from '../types';
 import { LocationIcon, ArrowRightIcon } from './Icons';
@@ -9,7 +10,8 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ t }) => {
   const [displayText, setDisplayText] = useState('');
-  const fullText = t.title;
+  // Translation-ში გვაქვს titles მასივი, ვიყენებთ პირველ ელემენტს
+  const fullText = t.titles[0];
 
   useEffect(() => {
     let i = 0;
@@ -20,7 +22,8 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
       if (i > fullText.length) clearInterval(timer);
     }, 60);
     return () => clearInterval(timer);
-  }, [fullText, t.title]);
+    // დამოკიდებულებებში ვცვლით t.title-ს t.titles-ით
+  }, [fullText, t.titles]);
 
   return (
     <section className="snap-start min-h-screen flex flex-col items-center justify-center text-center px-6 relative overflow-hidden">

@@ -1,14 +1,22 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppProvider, useApp } from './store/AppContext';
 import HomePage from './pages/HomePage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import GalleryPage from './pages/GalleryPage';
 import GalleryDetailPage from './pages/GalleryDetailPage';
+import BioPage from './pages/BioPage';
 
 const Router: React.FC = () => {
-  const { view } = useApp();
+  const { view, setView } = useApp();
+
+  // მარტივი "URL" მართვა /bio-სთვის
+  useEffect(() => {
+    if (window.location.hash === '#bio') {
+      setView('BIO');
+    }
+  }, [setView]);
 
   switch (view) {
     case 'ADMIN':
@@ -19,6 +27,8 @@ const Router: React.FC = () => {
       return <GalleryPage />;
     case 'GALLERY_DETAIL':
       return <GalleryDetailPage />;
+    case 'BIO':
+      return <BioPage />;
     default:
       return <HomePage />;
   }

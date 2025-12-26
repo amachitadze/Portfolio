@@ -20,9 +20,17 @@ interface AppState {
   setSelectedGalleryItem: (item: GalleryItem | null) => void;
   isAdminAuthenticated: boolean;            // ადმინის ავტორიზაცია
   setAdminAuthenticated: (val: boolean) => void;
+  isGalleryAuthenticated: boolean;          // გალერეის ავტორიზაცია
+  setGalleryAuthenticated: (val: boolean) => void;
   projects: Project[];                      // პროექტების სია
   galleryItems: GalleryItem[];              // პროცესების სია
   isLoading: boolean;                       // დატვირთვის სტატუსი
+  addProject: (p: Project) => Promise<void>;
+  updateProject: (p: Project) => Promise<void>;
+  deleteProject: (id: number) => Promise<void>;
+  addGalleryItem: (item: GalleryItem) => Promise<void>;
+  updateGalleryItem: (item: GalleryItem) => Promise<void>;
+  deleteGalleryItem: (id: number) => Promise<void>;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -46,6 +54,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return localStorage.getItem('isAdmin') === 'true';
   });
 
+  const [isGalleryAuthenticated, setGalleryAuthenticated] = useState<boolean>(() => {
+    return localStorage.getItem('isGalleryAuth') === 'true';
+  });
+
+  // სინქრონიზაცია localStorage-თან
+  useEffect(() => {
+    localStorage.setItem('isAdmin', isAdminAuthenticated.toString());
+  }, [isAdminAuthenticated]);
+
+  useEffect(() => {
+    localStorage.setItem('isGalleryAuth', isGalleryAuthenticated.toString());
+  }, [isGalleryAuthenticated]);
+
   /**
    * 🔄 მონაცემების წამოღება Supabase-დან
    */
@@ -67,6 +88,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     fetchData();
   }, []);
 
+  // CRUD ფუნქციები
+  const addProject = async (p: Project) => {
+    const { data, error } = await supabase.from('projects').insert(p).select();
+    if (!error && data) setProjects([data[0], ...projects]);
+  };
+
+  const updateProject = async (p: Project) => {
+    const { error } = await supabase.from('projects').update(p).eq('id', p.id);
+    if (!error) setProjects(projects.map(proj => proj.id === p.id ? p : proj));
+  };
+
+  const deleteProject = async (id: number) => {
+    const { error } = await supabase.from('projects').delete().eq('id', id);
+    if (!error) setProjects(projects.filter(p => p.id !== id));
+  };
+
+  const addGalleryItem = async (item: GalleryItem) => {
+    const { data, error } = await supabase.from('gallery_items').insert(item).select();
+    if (!error && data) setGalleryItems([data[0], ...galleryItems]);
+  };
+
+  const updateGalleryItem = async (item: GalleryItem) => {
+    const { error } = await supabase.from('gallery_items').update(item).eq('id', item.id);
+    if (!error) setGalleryItems(galleryItems.map(gi => gi.id === item.id ? item : gi));
+  };
+
+  const deleteGalleryItem = async (id: number) => {
+    const { error } = await supabase.from('gallery_items').delete().eq('id', id);
+    if (!error) setGalleryItems(galleryItems.filter(gi => gi.id !== id));
+  };
+
   // თემის ცვლილების ასახვა HTML კლასზე
   useEffect(() => {
     if (isDark) {
@@ -82,7 +134,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       view, setView, selectedProject, setSelectedProject,
       selectedGalleryItem, setSelectedGalleryItem,
       isAdminAuthenticated, setAdminAuthenticated,
-      projects, galleryItems, isLoading
+      isGalleryAuthenticated, setGalleryAuthenticated,
+      projects, galleryItems, isLoading,
+      addProject, updateProject, deleteProject,
+      addGalleryItem, updateGalleryItem, deleteGalleryItem
     }}>
       {children}
     </AppContext.Provider>

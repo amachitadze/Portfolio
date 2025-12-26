@@ -20,5 +20,14 @@ export const es: Translation = {
   selectedWork: 'TRABAJOS SELECCIONADOS',
   letsConnectTitle: 'Conectemos',
   letsConnectSubtitle: 'Siempre estoy abierto a discutir nuevos proyectos, ideas creativas u oportunidades para ser parte de tu visión.',
-  connectButton: 'Enviar mensaje'
+  connectButton: 'Enviar mensaje',
+
+  // Bio Page (ესპანური თარგმანები)
+  bioName: 'Avtandil Machitadze',
+  bioRole: 'Consultor de Implementación y Desarrollo de Productos Digitales',
+  bioLinkPortfolio: 'Mi Portafolio',
+  bioLinkBehance: 'Trabajos en Behance',
+  bioLinkDribbble: 'Shots de Dribbble',
+  bioLinkInstagram: 'Instagram',
+  bioLinkLastProject: 'Último Proyecto'
 };

@@ -12,7 +12,7 @@ import { LANGUAGES } from '../../constants';
  */
 const Footer: React.FC<{ t: Translation }> = ({ t }) => {
   const { typography, colors } = THEME;
-  const { lang, setLang, isDark, toggleDark } = useApp();
+  const { lang, setLang, isDark, toggleDark, setView } = useApp();
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
 
   return (
@@ -25,9 +25,9 @@ const Footer: React.FC<{ t: Translation }> = ({ t }) => {
       </div>
 
       <div className="max-w-6xl mx-auto text-center relative z-10 px-4">
-        {/* ✨ მთავარი სათაური აქცენტის ფერით */}
+        {/* ✨ მთავარი სათაური - იმართება THEME.typography.footerTitle-დან */}
         <h2 
-          className={`text-4xl sm:text-6xl md:text-8xl lg:text-[110px] ${typography.heroTitle.weight} ${typography.heroTitle.tracking} mb-8 md:mb-12 leading-[1.1] antialiased`}
+          className={`${typography.footerTitle.size} ${typography.footerTitle.weight} ${typography.footerTitle.tracking} ${typography.footerTitle.leading} mb-8 md:mb-12 antialiased`}
           style={{ color: colors.black }}
         >
           {t.letsConnectTitle}
@@ -69,7 +69,6 @@ const Footer: React.FC<{ t: Translation }> = ({ t }) => {
                         setIsLangMenuOpen(false);
                       }}
                       className={`w-full text-left px-5 py-3 text-[10px] font-black tracking-wide uppercase transition-colors ${lang === l ? 'text-zinc-900 bg-zinc-50 dark:bg-zinc-800/50' : 'text-zinc-400'}`}
-                      style={lang === l ? { color: colors.accent } : {}}
                     >
                       {l}
                     </button>
@@ -90,13 +89,20 @@ const Footer: React.FC<{ t: Translation }> = ({ t }) => {
 
       {/* 📄 საავტორო უფლებები და სოც. ქსელები */}
       <div className="absolute bottom-8 md:bottom-12 w-full max-w-7xl px-8 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-10">
-        <div className="flex gap-8 text-zinc-400 dark:text-zinc-600">
+        <div className="flex items-center gap-8 text-zinc-400 dark:text-zinc-600">
           <a href="#" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors duration-300">
             <GithubIcon className="w-5 md:w-6 h-5 md:h-6" />
           </a>
           <a href="#" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors duration-300">
              <LinkedInIcon className="w-5 md:w-6 h-5 md:h-6" />
           </a>
+          {/* 🧬 Bio Page Link */}
+          <button 
+            onClick={() => setView('BIO')}
+            className="text-[10px] font-black uppercase tracking-widest hover:text-zinc-900 dark:hover:text-white transition-all underline underline-offset-4"
+          >
+            BIO
+          </button>
         </div>
         <p className="text-[8px] md:text-[9px] uppercase tracking-widest text-zinc-300 dark:text-zinc-800 font-black antialiased text-center">
           © 2025 PORTFOLIO. ყველა უფლება დაცულია.

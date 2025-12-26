@@ -7,19 +7,19 @@ export type Language = 'ENG' | 'GEO' | 'ESP';
 /**
  * 🗺 აპლიკაციის ხედები (გვერდები)
  */
-export type View = 'SITE' | 'DETAIL' | 'ADMIN' | 'GALLERY' | 'GALLERY_DETAIL';
+export type View = 'SITE' | 'DETAIL' | 'ADMIN' | 'GALLERY' | 'GALLERY_DETAIL' | 'BIO';
 
 /**
  * 💼 პროექტის ინტერფეისი
  */
 export interface Project {
   id: number;
-  title: string;      // დასახელება
-  image: string;      // სურათის ლინკი
-  tags: string[];     // ტეგები (UI/UX, Frontend და ა.შ.)
-  year?: string;      // წელი
-  client?: string;    // კლიენტი
-  content: string;    // დეტალური აღწერა (HTML ფორმატში)
+  title: string;
+  image: string;
+  tags: string[];
+  year?: string;
+  client?: string;
+  content: string;
 }
 
 /**
@@ -27,34 +27,47 @@ export interface Project {
  */
 export interface GalleryItem {
   id: number;
-  projectTitle: string; // პროექტის სახელი
-  description: string;  // მოკლე აღწერა
-  period: string;       // პერიოდი
-  images: string[];     // სურათების მასივი
+  projectTitle: string;
+  description: string;
+  period: string;
+  images: string[];
 }
 
 /**
  * 🗣 ლოკალიზაციის (თარგმანების) სტრუქტურა
  */
 export interface Translation {
-  titles: string[];     // სათაურები ბეჭდვის ეფექტისთვის
-  subtitle: string;     // ქვესათაური
-  description: string;  // აღწერა
-  location: string;     // მდებარეობა
-  status: string;       // სტატუსი (მაგ: ხელმისაწვდომია)
-  viewWork: string;     // ღილაკი: ნამუშევრების ნახვა
-  getInTouch: string;   // ღილაკი: კონტაქტი
+  // Hero
+  titles: string[];
+  subtitle: string;
+  description: string;
+  location: string;
+  status: string;
+  viewWork: string;
+  getInTouch: string;
+  
+  // About
   aboutMeTitle: string; 
   aboutMeText1: string;
   aboutMeText2: string;
   skillsTitle: string;
+  
+  // Projects
   selectedWork: string;
+  
+  // Footer
   letsConnectTitle: string;
   letsConnectSubtitle: string;
   connectButton: string;
+
+  // Bio Page (ახალი)
+  bioName: string;
+  bioRole: string;
+  bioLinkPortfolio: string;
+  bioLinkBehance: string;
+  bioLinkDribbble: string;
+  bioLinkInstagram: string;
+  bioLinkLastProject: string;
 }
 
-/**
- * 📚 ენების რუკა
- */
 export type TranslationsMap = Record<Language, Translation>;
