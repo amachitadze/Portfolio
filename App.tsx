@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AppProvider, useApp } from './store/AppContext';
 import HomePage from './pages/HomePage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
@@ -10,13 +10,7 @@ import BioPage from './pages/BioPage';
 import BrandPage from './pages/BrandPage';
 
 const Router: React.FC = () => {
-  const { view, setView } = useApp();
-
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (hash === '#bio') setView('BIO');
-    if (hash === '#brand') setView('BRAND');
-  }, [setView]);
+  const { view } = useApp();
 
   switch (view) {
     case 'ADMIN':

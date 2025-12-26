@@ -1,6 +1,5 @@
 
-// React იმპორტი დამატებულია React.FC და React.ReactNode ტიპების გამოსაყენებლად
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Language, View, Project, GalleryItem, BrandData } from '../types';
 import { supabase } from '../services/supabase';
 import { PROJECTS } from '../constants';
@@ -60,10 +59,36 @@ const INITIAL_BRAND_DATA: BrandData = {
   }
 };
 
+// დამხმარე ფუნქცია Path-ის View-ში გადასაყვანად
+const getViewFromPath = (path: string): View => {
+  switch (path) {
+    case '/gallery': return 'GALLERY';
+    case '/bio': return 'BIO';
+    case '/brand': return 'BRAND';
+    case '/mmartveli': return 'ADMIN';
+    case '/project': return 'DETAIL';
+    case '/gallery-detail': return 'GALLERY_DETAIL';
+    default: return 'SITE';
+  }
+};
+
+// დამხმარე ფუნქცია View-ს Path-ში გადასაყვანად
+const getPathFromView = (view: View): string => {
+  switch (view) {
+    case 'GALLERY': return '/gallery';
+    case 'BIO': return '/bio';
+    case 'BRAND': return '/brand';
+    case 'ADMIN': return '/mmartveli';
+    case 'DETAIL': return '/project';
+    case 'GALLERY_DETAIL': return '/gallery-detail';
+    default: return '/';
+  }
+};
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [lang, setLang] = useState<Language>('GEO');
   const [isDark, setIsDark] = useState(false);
-  const [view, setView] = useState<View>('SITE');
+  const [view, setInternalView] = useState<View>(getViewFromPath(window.location.pathname));
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   
@@ -74,6 +99,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   
   const [isAdminAuthenticated, setAdminAuthenticated] = useState<boolean>(() => localStorage.getItem('isAdmin') === 'true');
   const [isGalleryAuthenticated, setGalleryAuthenticated] = useState<boolean>(() => localStorage.getItem('isGalleryAuth') === 'true');
+
+  // ნავიგაციის ფუნქცია, რომელიც ცვლის URL-ს
+  const setView = useCallback((newView: View) => {
+    const newPath = getPathFromView(newView);
+    if (window.location.pathname !== newPath) {
+      window.history.pushState({}, '', newPath);
+    }
+    setInternalView(newView);
+    window.scrollTo(0, 0);
+  }, []);
+
+  // ბრაუზერის Back/Forward ღილაკების მოსმენა
+  useEffect(() => {
+    const handlePopState = () => {
+      setInternalView(getViewFromPath(window.location.pathname));
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('isAdmin', isAdminAuthenticated.toString());

@@ -21,10 +21,11 @@ const HomePage: React.FC = () => {
         <ProjectGrid t={t} />
         <Footer t={t} />
         
-        {/* ფარული ღილაკი ადმინისთვის */}
+        {/* ფარული ღილაკი ადმინისთვის - გადამისამართება /mmartveli-ზე */}
         <div 
           onClick={() => setView('ADMIN')}
           className="fixed bottom-0 left-0 w-8 h-8 opacity-0 cursor-default z-50 hover:opacity-10 bg-zinc-400"
+          title="Admin Access"
         />
       </main>
 
