@@ -35,7 +35,6 @@ interface AppState {
 
 const AppContext = createContext<AppState | undefined>(undefined);
 
-// ბრენდის მონაცემების საწყისი მნიშვნელობა, დამატებულია bio ველი შეცდომის გამოსასწორებლად
 const INITIAL_BRAND_DATA: BrandData = {
   logos: [],
   logoRules: '',
@@ -57,12 +56,6 @@ const INITIAL_BRAND_DATA: BrandData = {
     purpose: '',
     goal: '',
     detailedManualUrl: ''
-  },
-  bio: {
-    name: '',
-    role: '',
-    socials: [],
-    links: []
   }
 };
 
