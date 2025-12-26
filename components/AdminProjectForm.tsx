@@ -37,12 +37,11 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
   };
 
   const uploadToImgBB = async (file: File) => {
-    // @ts-ignore
-    const key = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_IMGBB_API_KEY) || 
-                (typeof process !== 'undefined' && (process.env?.VITE_IMGBB_API_KEY || process.env?.IMGBB_API_KEY));
+    // პირდაპირი მიმართვა Vite-ს ცვლადზე
+    const key = (import.meta as any).env?.VITE_IMGBB_API_KEY;
     
     if (!key) {
-      alert('ImgBB API Key ვერ მოიძებნა. დარწმუნდით, რომ Vercel-ში ცვლადს ჰქვია VITE_IMGBB_API_KEY.');
+      alert('VITE_IMGBB_API_KEY ვერ მოიძებნა. დარწმუნდით, რომ Redeploy გააკეთეთ ვერსელზე.');
       return { success: false };
     }
     const uploadData = new FormData();
@@ -65,8 +64,6 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
     const result = await uploadToImgBB(file);
     if (result.success) {
       setFormData({ ...formData, image: result.data.url });
-    } else {
-      alert('ატვირთვა ვერ მოხერხდა. შეამოწმეთ VITE_IMGBB_API_KEY.');
     }
     setIsCoverUploading(false);
   };
@@ -95,11 +92,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
       client: formData.client,
       content: editorRef.current?.innerHTML || '',
     };
-    if (project) {
-      await updateProject(newProject);
-    } else {
-      await addProject(newProject);
-    }
+    project ? await updateProject(newProject) : await addProject(newProject);
     onClose();
   };
 
@@ -107,10 +100,8 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
     <div className="fixed inset-0 bg-white dark:bg-zinc-950 z-[100] overflow-y-auto animate-in slide-in-from-bottom-10 duration-500">
       <div className="max-w-4xl mx-auto px-8 py-12">
         <div className="flex items-center justify-between mb-16">
-          <h2 className="text-3xl font-normal tracking-tight">{project ? 'პროექტის რედაქტირება' : 'ახალი პროექტი'}</h2>
-          <button onClick={onClose} className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
-            დახურვა
-          </button>
+          <h2 className="text-3xl font-normal tracking-tight">{project ? 'რედაქტირება' : 'ახალი პროექტი'}</h2>
+          <button onClick={onClose} className="text-zinc-400">დახურვა</button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-10 pb-20">
@@ -121,11 +112,11 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
                 <input required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-5 py-3 outline-none" />
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-3 block">მთავარი სურათი (Cover)</label>
+                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-3 block">Cover Image</label>
                 <div className="flex gap-3">
                   <input required value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="flex-1 bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-5 py-3 outline-none" />
                   <input type="file" ref={coverFileInputRef} onChange={handleCoverUpload} className="hidden" accept="image/*" />
-                  <button type="button" onClick={() => coverFileInputRef.current?.click()} className="px-4 bg-zinc-100 dark:bg-zinc-800 rounded-xl text-[10px] uppercase hover:bg-zinc-200 transition-all">
+                  <button type="button" onClick={() => coverFileInputRef.current?.click()} className="px-4 bg-zinc-100 dark:bg-zinc-800 rounded-xl text-[10px] uppercase">
                     {isCoverUploading ? '...' : 'ატვირთვა'}
                   </button>
                 </div>
@@ -147,19 +138,13 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <label className="text-[10px] uppercase tracking-widest text-zinc-400 block">შიგთავსი (Editor)</label>
-            </div>
-            
+            <label className="text-[10px] uppercase tracking-widest text-zinc-400 block">Editor</label>
             <div className="flex flex-wrap items-center gap-1 p-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-t-2xl">
               <button type="button" onClick={() => execCommand('bold')} className="p-2 hover:bg-white rounded">B</button>
-              <button type="button" onClick={() => execCommand('italic')} className="p-2 hover:bg-white rounded">I</button>
               <button type="button" onClick={() => execCommand('formatBlock', 'h2')} className="p-2 hover:bg-white rounded text-xs">H2</button>
-              <button type="button" onClick={() => execCommand('insertUnorderedList')} className="p-2 hover:bg-white rounded text-xs">სია</button>
               <input type="file" ref={contentFileInputRef} onChange={handleContentFilesUpload} multiple className="hidden" accept="image/*" />
-              <button type="button" onClick={() => contentFileInputRef.current?.click()} className="p-2 hover:bg-white rounded text-xs uppercase">სურათების დამატება</button>
+              <button type="button" onClick={() => contentFileInputRef.current?.click()} className="p-2 hover:bg-white rounded text-xs uppercase">სურათები</button>
             </div>
-            
             <div ref={editorRef} contentEditable className="w-full min-h-[400px] bg-white dark:bg-zinc-900/50 border-x border-b border-zinc-100 dark:border-zinc-800 rounded-b-2xl p-10 outline-none prose dark:prose-invert max-w-none" />
           </div>
 
