@@ -94,53 +94,53 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
 
   return (
     <div className="fixed inset-0 bg-white dark:bg-zinc-950 z-[100] overflow-y-auto animate-in slide-in-from-bottom-10 duration-500 font-sans">
-      <div className="max-w-5xl mx-auto px-8 py-12">
-        <div className="flex items-center justify-between mb-16">
-          <h2 className="text-3xl font-black tracking-tight uppercase">{project ? 'რედაქტირება' : 'ახალი პროექტი'}</h2>
-          <button onClick={onClose} className="text-[10px] font-black uppercase tracking-widest text-zinc-400">დახურვა</button>
+      <div className="max-w-5xl mx-auto px-4 md:px-8 py-8 md:py-12">
+        <div className="flex items-center justify-between mb-8 md:mb-16">
+          <h2 className="text-xl md:text-3xl font-black tracking-tight uppercase">{project ? 'რედაქტირება' : 'ახალი პროექტი'}</h2>
+          <button onClick={onClose} className="text-[10px] font-black uppercase tracking-widest text-zinc-400 px-2 py-1">დახურვა</button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-10 pb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <form onSubmit={handleSubmit} className="space-y-8 md:space-y-10 pb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
             <div className="space-y-6">
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-3 block font-bold">პროექტის დასახელება</label>
-                <input required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-5 py-3 outline-none" />
+                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-2 block font-bold">პროექტის დასახელება</label>
+                <input required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-4 md:px-5 py-3 outline-none" />
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-3 block font-bold">Cover Image</label>
-                <div className="flex gap-3">
-                  <input required value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="flex-1 bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-5 py-3 outline-none text-xs" />
+                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-2 block font-bold">Cover Image</label>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input required value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="flex-1 bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-4 md:px-5 py-3 outline-none text-xs" />
                   <input type="file" ref={coverFileInputRef} onChange={handleCoverUpload} className="hidden" accept="image/*" />
-                  <button type="button" onClick={() => coverFileInputRef.current?.click()} className="px-4 bg-zinc-100 dark:bg-zinc-800 rounded-xl text-[10px] font-bold uppercase tracking-widest">
+                  <button type="button" onClick={() => coverFileInputRef.current?.click()} className="px-5 py-3 bg-zinc-100 dark:bg-zinc-800 rounded-xl text-[10px] font-bold uppercase tracking-widest shrink-0">
                     {isCoverUploading ? '...' : 'ატვირთვა'}
                   </button>
                 </div>
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-3 block font-bold">Live დემო ლინკი</label>
-                <input value={formData.demoUrl} onChange={e => setFormData({...formData, demoUrl: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-5 py-3 outline-none text-xs" placeholder="https://..." />
+                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-2 block font-bold">Live დემო ლინკი</label>
+                <input value={formData.demoUrl} onChange={e => setFormData({...formData, demoUrl: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-4 md:px-5 py-3 outline-none text-xs" placeholder="https://..." />
               </div>
             </div>
             <div className="space-y-6">
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-3 block font-bold">კლიენტი / ტეგები</label>
-                <div className="grid grid-cols-2 gap-4">
-                  <input value={formData.client} onChange={e => setFormData({...formData, client: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-5 py-3 outline-none" placeholder="კლიენტი" />
-                  <input value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-5 py-3 outline-none" placeholder="ტეგი1, ტეგი2" />
+                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-2 block font-bold">კლიენტი / ტეგები</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input value={formData.client} onChange={e => setFormData({...formData, client: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-4 md:px-5 py-3 outline-none" placeholder="კლიენტი" />
+                  <input value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-4 md:px-5 py-3 outline-none" placeholder="ტეგი1, ტეგი2" />
                 </div>
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-3 block font-bold">წელი</label>
-                <input value={formData.year} onChange={e => setFormData({...formData, year: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-5 py-3 outline-none" />
+                <label className="text-[10px] uppercase tracking-widest text-zinc-400 mb-2 block font-bold">წელი</label>
+                <input value={formData.year} onChange={e => setFormData({...formData, year: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl px-4 md:px-5 py-3 outline-none" />
               </div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <label className="text-[10px] uppercase tracking-widest text-zinc-400 block font-bold">პროექტის დეტალური აღწერა</label>
-              <button type="button" onClick={() => contentFileInputRef.current?.click()} className="text-[10px] font-black uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-4 py-2 rounded-lg">
+              <button type="button" onClick={() => contentFileInputRef.current?.click()} className="text-[10px] font-black uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-4 py-2 rounded-lg w-full sm:w-auto">
                 + სურათების დამატება
               </button>
               <input type="file" ref={contentFileInputRef} onChange={handleContentFilesUpload} multiple className="hidden" accept="image/*" />
@@ -152,9 +152,9 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
             />
           </div>
 
-          <div className="flex gap-4 pt-10 sticky bottom-0 bg-white dark:bg-zinc-950 py-6 border-t border-zinc-100 dark:border-zinc-900">
-            <button type="submit" className="flex-1 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 py-5 rounded-[20px] text-[11px] font-black uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all">შენახვა</button>
-            <button type="button" onClick={onClose} className="px-10 py-5 text-zinc-400 text-[11px] font-black uppercase tracking-widest">გაუქმება</button>
+          <div className="flex flex-col-reverse sm:flex-row gap-4 pt-10 sticky bottom-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm py-4 md:py-6 border-t border-zinc-100 dark:border-zinc-900 z-10">
+            <button type="button" onClick={onClose} className="px-10 py-4 text-zinc-400 text-[11px] font-black uppercase tracking-widest">გაუქმება</button>
+            <button type="submit" className="flex-1 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 py-4 md:py-5 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all">შენახვა</button>
           </div>
         </form>
       </div>
