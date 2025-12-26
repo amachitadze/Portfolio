@@ -1,43 +1,51 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Language, View, Project, GalleryItem } from '../types';
+import { Language, View, Project, GalleryItem, BrandData } from '../types';
 import { supabase } from '../services/supabase';
 import { PROJECTS, INITIAL_GALLERY_ITEMS } from '../constants';
 
-/**
- * 🧠 აპლიკაციის გლობალური მდგომარეობის (State) ინტერფეისი
- */
 interface AppState {
-  lang: Language;                           // მიმდინარე ენა
+  lang: Language;
   setLang: (lang: Language) => void;
-  isDark: boolean;                         // მუქი თემა
+  isDark: boolean;
   toggleDark: () => void;
-  view: View;                               // მიმდინარე გვერდი
+  view: View;
   setView: (view: View) => void;
-  selectedProject: Project | null;          // არჩეული პროექტი დეტალებისთვის
+  selectedProject: Project | null;
   setSelectedProject: (p: Project | null) => void;
   selectedGalleryItem: GalleryItem | null;
   setSelectedGalleryItem: (item: GalleryItem | null) => void;
-  isAdminAuthenticated: boolean;            // ადმინის ავტორიზაცია
+  isAdminAuthenticated: boolean;
   setAdminAuthenticated: (val: boolean) => void;
-  isGalleryAuthenticated: boolean;          // გალერეის ავტორიზაცია
+  isGalleryAuthenticated: boolean;
   setGalleryAuthenticated: (val: boolean) => void;
-  projects: Project[];                      // პროექტების სია
-  galleryItems: GalleryItem[];              // პროცესების სია
-  isLoading: boolean;                       // დატვირთვის სტატუსი
+  projects: Project[];
+  galleryItems: GalleryItem[];
+  brandData: BrandData;
+  setBrandData: (data: BrandData) => void;
+  isLoading: boolean;
   addProject: (p: Project) => Promise<void>;
   updateProject: (p: Project) => Promise<void>;
   deleteProject: (id: number) => Promise<void>;
   addGalleryItem: (item: GalleryItem) => Promise<void>;
   updateGalleryItem: (item: GalleryItem) => Promise<void>;
   deleteGalleryItem: (id: number) => Promise<void>;
+  saveBrandData: (data: BrandData) => Promise<void>;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
 
-/**
- * 🏗 AppProvider - აწვდის მონაცემებს მთელ აპლიკაციას
- */
+const INITIAL_BRAND_DATA: BrandData = {
+  logos: [],
+  fonts: [],
+  strategy: {
+    archetype: '',
+    purpose: '',
+    goal: '',
+    detailedManualUrl: ''
+  }
+};
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [lang, setLang] = useState<Language>('GEO');
   const [isDark, setIsDark] = useState(false);
@@ -47,18 +55,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   
   const [projects, setProjects] = useState<Project[]>(PROJECTS);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(INITIAL_GALLERY_ITEMS);
+  const [brandData, setBrandData] = useState<BrandData>(INITIAL_BRAND_DATA);
   const [isLoading, setIsLoading] = useState(true);
   
-  // ავტორიზაციის შემოწმება localStorage-დან
-  const [isAdminAuthenticated, setAdminAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('isAdmin') === 'true';
-  });
+  const [isAdminAuthenticated, setAdminAuthenticated] = useState<boolean>(() => localStorage.getItem('isAdmin') === 'true');
+  const [isGalleryAuthenticated, setGalleryAuthenticated] = useState<boolean>(() => localStorage.getItem('isGalleryAuth') === 'true');
 
-  const [isGalleryAuthenticated, setGalleryAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('isGalleryAuth') === 'true';
-  });
-
-  // სინქრონიზაცია localStorage-თან
   useEffect(() => {
     localStorage.setItem('isAdmin', isAdminAuthenticated.toString());
   }, [isAdminAuthenticated]);
@@ -67,18 +69,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('isGalleryAuth', isGalleryAuthenticated.toString());
   }, [isGalleryAuthenticated]);
 
-  /**
-   * 🔄 მონაცემების წამოღება Supabase-დან
-   */
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const { data: projectsData } = await supabase.from('projects').select('*').order('id', { ascending: false });
         const { data: galleryData } = await supabase.from('gallery_items').select('*').order('id', { ascending: false });
+        const { data: brandConfig } = await supabase.from('brand_config').select('data').single();
         
         if (projectsData?.length) setProjects(projectsData);
         if (galleryData?.length) setGalleryItems(galleryData);
+        if (brandConfig?.data) setBrandData(brandConfig.data);
       } catch (error) {
         console.error('Fetch error:', error);
       } finally {
@@ -88,7 +89,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     fetchData();
   }, []);
 
-  // CRUD ფუნქციები
   const addProject = async (p: Project) => {
     const { data, error } = await supabase.from('projects').insert(p).select();
     if (!error && data) setProjects([data[0], ...projects]);
@@ -119,13 +119,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (!error) setGalleryItems(galleryItems.filter(gi => gi.id !== id));
   };
 
-  // თემის ცვლილების ასახვა HTML კლასზე
+  const saveBrandData = async (data: BrandData) => {
+    const { error } = await supabase.from('brand_config').upsert({ id: 1, data });
+    if (!error) setBrandData(data);
+  };
+
   useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    if (isDark) document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
   }, [isDark]);
 
   return (
@@ -135,18 +136,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       selectedGalleryItem, setSelectedGalleryItem,
       isAdminAuthenticated, setAdminAuthenticated,
       isGalleryAuthenticated, setGalleryAuthenticated,
-      projects, galleryItems, isLoading,
+      projects, galleryItems, brandData, setBrandData, isLoading,
       addProject, updateProject, deleteProject,
-      addGalleryItem, updateGalleryItem, deleteGalleryItem
+      addGalleryItem, updateGalleryItem, deleteGalleryItem,
+      saveBrandData
     }}>
       {children}
     </AppContext.Provider>
   );
 };
 
-/**
- * 🎣 Custom Hook აპლიკაციის მდგომარეობის გამოსაყენებლად
- */
 export const useApp = () => {
   const context = useContext(AppContext);
   if (!context) throw new Error('useApp must be used within AppProvider');

@@ -4,10 +4,11 @@ import { useApp } from '../store/AppContext';
 import { Project, GalleryItem } from '../types';
 import AdminProjectForm from './AdminProjectForm';
 import AdminGalleryForm from './AdminGalleryForm';
+import AdminBrandForm from './AdminBrandForm';
 
 const AdminDashboard: React.FC = () => {
   const { setAdminAuthenticated, setView, projects, deleteProject, galleryItems, deleteGalleryItem } = useApp();
-  const [activeTab, setActiveTab] = useState<'projects' | 'gallery'>('projects');
+  const [activeTab, setActiveTab] = useState<'projects' | 'gallery' | 'brand'>('projects');
   const [editingItem, setEditingItem] = useState<any>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -22,11 +23,8 @@ const AdminDashboard: React.FC = () => {
   };
 
   if (isFormOpen) {
-    return activeTab === 'projects' ? (
-      <AdminProjectForm project={editingItem} onClose={() => setIsFormOpen(false)} />
-    ) : (
-      <AdminGalleryForm item={editingItem} onClose={() => setIsFormOpen(false)} />
-    );
+    if (activeTab === 'projects') return <AdminProjectForm project={editingItem} onClose={() => setIsFormOpen(false)} />;
+    if (activeTab === 'gallery') return <AdminGalleryForm item={editingItem} onClose={() => setIsFormOpen(false)} />;
   }
 
   return (
@@ -50,22 +48,30 @@ const AdminDashboard: React.FC = () => {
                 onClick={() => setActiveTab('gallery')}
                 className={`px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all ${activeTab === 'gallery' ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-600'}`}
               >
-                Work Process
+                Process
+              </button>
+              <button 
+                onClick={() => setActiveTab('brand')}
+                className={`px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all ${activeTab === 'brand' ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-600'}`}
+              >
+                Brand
               </button>
             </nav>
           </div>
           
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <button onClick={handleLogout} className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest hover:text-zinc-900">Logout</button>
-            <button onClick={openAddForm} className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-6 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-2">
-              Add {activeTab === 'projects' ? 'Project' : 'Process'}
-            </button>
+            {activeTab !== 'brand' && (
+              <button onClick={openAddForm} className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-6 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-2">
+                Add {activeTab === 'projects' ? 'Project' : 'Process'}
+              </button>
+            )}
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-8 py-10">
-        {activeTab === 'projects' ? (
+        {activeTab === 'projects' && (
           <div className="space-y-4">
             {projects.map((p) => (
               <div key={p.id} className="flex items-center justify-between p-5 bg-white border border-zinc-100 dark:border-zinc-900 rounded-[24px]">
@@ -83,7 +89,8 @@ const AdminDashboard: React.FC = () => {
               </div>
             ))}
           </div>
-        ) : (
+        )}
+        {activeTab === 'gallery' && (
           <div className="space-y-4">
             {galleryItems.map((item) => (
               <div key={item.id} className="flex items-center justify-between p-5 bg-white border border-zinc-100 dark:border-zinc-900 rounded-[24px]">
@@ -95,7 +102,7 @@ const AdminDashboard: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-bold">{item.projectTitle}</h3>
-                    <p className="text-[10px] text-zinc-400 uppercase tracking-widest font-bold">{item.period}</p>
+                    <p className="text-[10px] text-zinc-400 uppercase tracking-widest font-bold">{item.period} {item.tags?.includes('profile') && '• PROFILE'}</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -106,6 +113,7 @@ const AdminDashboard: React.FC = () => {
             ))}
           </div>
         )}
+        {activeTab === 'brand' && <AdminBrandForm />}
       </main>
     </div>
   );

@@ -18,6 +18,7 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
     description: item?.description || '',
     period: item?.period || '',
     images: item?.images || [] as string[],
+    tags: item?.tags?.join(', ') || '', // დაემატა ტეგების ველი
   });
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +47,11 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
     e.preventDefault();
     const newItem: GalleryItem = {
       id: item?.id || Date.now(),
-      ...formData
+      projectTitle: formData.projectTitle,
+      description: formData.description,
+      period: formData.period,
+      images: formData.images,
+      tags: formData.tags.split(',').map(t => t.trim()).filter(t => t !== ''), // ტეგების პარსინგი
     };
     item ? await updateGalleryItem(newItem) : await addGalleryItem(newItem);
     onClose();
@@ -73,6 +78,13 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
             <div className="space-y-2">
               <label className="text-[10px] font-bold uppercase text-zinc-400 tracking-widest">Period</label>
               <input required value={formData.period} onChange={e => setFormData({...formData, period: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 p-4 rounded-xl outline-none" placeholder="Jan - Mar 2024" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase text-zinc-400 tracking-widest">Tags (use 'profile' to show on Brand Page)</label>
+              <input value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 p-4 rounded-xl outline-none" placeholder="profile, lifestyle, branding" />
             </div>
           </div>
 

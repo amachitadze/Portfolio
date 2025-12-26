@@ -29,5 +29,7 @@ export const es: Translation = {
   bioLinkBehance: 'Trabajos en Behance',
   bioLinkDribbble: 'Shots de Dribbble',
   bioLinkInstagram: 'Instagram',
-  bioLinkLastProject: 'Último Proyecto'
+  bioLinkLastProject: 'Último Proyecto',
+  // დამატებულია გამოტოვებული ველი
+  brandTitle: 'Mi Marca'
 };

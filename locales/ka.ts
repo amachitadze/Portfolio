@@ -17,13 +17,12 @@ export const ka: Translation = {
   letsConnectTitle: 'მომწერე',
   letsConnectSubtitle: 'მე ყოველთვის მზად ვარ ახალი პროექტების, კრეატიული იდეების ან შესაძლებლობების განსახილველად.',
   connectButton: 'მოგვწერეთ',
-  
-  // Bio
   bioName: 'ავთანდილ მაჩიტაძე',
   bioRole: 'ციფრული პროდუქტების დანერგვისა და განვითარების კონსულტანტი',
   bioLinkPortfolio: 'ჩემი პორტფოლიო',
   bioLinkBehance: 'Behance ნამუშევრები',
   bioLinkDribbble: 'ჩემი ჩანაწერები Substack-ზე',
   bioLinkInstagram: 'ჩემი რეზიუმე',
-  bioLinkLastProject: 'ჩანიშნე შეხვედრა'
+  bioLinkLastProject: 'ჩანიშნე შეხვედრა',
+  brandTitle: 'ჩემი ბრენდი'
 };

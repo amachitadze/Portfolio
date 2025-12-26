@@ -25,5 +25,7 @@ export const en: Translation = {
   bioLinkBehance: 'Behance Works',
   bioLinkDribbble: 'Dribbble Shots',
   bioLinkInstagram: 'Instagram',
-  bioLinkLastProject: 'Latest Project'
+  bioLinkLastProject: 'Latest Project',
+  // დამატებულია გამოტოვებული ველი
+  brandTitle: 'My Brand'
 };

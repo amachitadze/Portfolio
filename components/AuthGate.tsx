@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { useApp } from '../store/AppContext';
+import { TRANSLATIONS } from '../constants';
 
 interface AuthGateProps {
   title: string;
@@ -12,7 +13,8 @@ interface AuthGateProps {
 const AuthGate: React.FC<AuthGateProps> = ({ title, subtitle, onSuccess, onBack }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { setView } = useApp();
+  const { setView, lang } = useApp();
+  const t = TRANSLATIONS[lang];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,12 +65,20 @@ const AuthGate: React.FC<AuthGateProps> = ({ title, subtitle, onSuccess, onBack 
         </form>
 
         <div className="mt-12 flex flex-col items-center gap-6">
-          <button 
-            onClick={() => setView('GALLERY')}
-            className="px-8 py-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-full text-[10px] font-black uppercase tracking-wide hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all active:scale-95"
-          >
-            View Work Process
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setView('GALLERY')}
+              className="px-6 py-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-full text-[10px] font-black uppercase tracking-wide hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all active:scale-95"
+            >
+              View Work Process
+            </button>
+            <button 
+              onClick={() => setView('BRAND')}
+              className="px-6 py-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-full text-[10px] font-black uppercase tracking-wide hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all active:scale-95"
+            >
+              {t.brandTitle}
+            </button>
+          </div>
 
           <button
             onClick={onBack}
