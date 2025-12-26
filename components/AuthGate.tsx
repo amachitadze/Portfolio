@@ -30,8 +30,8 @@ const AuthGate: React.FC<AuthGateProps> = ({ title, subtitle, onSuccess, onBack 
           </svg>
         </div>
 
-        <h1 className="text-2xl font-black text-zinc-900 dark:text-zinc-50 mb-3 tracking-tight text-center">{title}</h1>
-        <p className="text-zinc-400 dark:text-zinc-500 text-[13px] mb-12 font-bold uppercase tracking-wider text-center">{subtitle}</p>
+        <h1 className="text-2xl font-black text-zinc-900 dark:text-zinc-50 mb-3 tracking-tight text-center">ავტორიზაცია</h1>
+        <p className="text-zinc-400 dark:text-zinc-500 text-[13px] mb-12 font-bold uppercase tracking-wider text-center">წვდომა დაცულია</p>
 
         <form onSubmit={handleSubmit} className="w-full space-y-4">
           <div className="relative">
@@ -39,7 +39,7 @@ const AuthGate: React.FC<AuthGateProps> = ({ title, subtitle, onSuccess, onBack 
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter Password"
+              placeholder="შეიყვანეთ პაროლი"
               className="w-full px-6 py-5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-[20px] focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white transition-all text-sm font-bold tracking-tight pr-14 text-center"
               autoFocus
             />
@@ -60,7 +60,7 @@ const AuthGate: React.FC<AuthGateProps> = ({ title, subtitle, onSuccess, onBack 
             type="submit"
             className="w-full py-5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-[20px] font-black text-[11px] uppercase tracking-wide shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
-            Unlock Access
+            შესვლა
           </button>
         </form>
 
@@ -70,13 +70,13 @@ const AuthGate: React.FC<AuthGateProps> = ({ title, subtitle, onSuccess, onBack 
               onClick={() => setView('GALLERY')}
               className="px-6 py-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-full text-[10px] font-black uppercase tracking-wide hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all active:scale-95"
             >
-              View Work Process
+              სამუშაო პროცესი
             </button>
             <button 
               onClick={() => setView('BRAND')}
               className="px-6 py-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-full text-[10px] font-black uppercase tracking-wide hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all active:scale-95"
             >
-              {t.brandTitle}
+              ბრენდბუქი
             </button>
           </div>
 
@@ -84,7 +84,7 @@ const AuthGate: React.FC<AuthGateProps> = ({ title, subtitle, onSuccess, onBack 
             onClick={onBack}
             className="text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:text-zinc-600 dark:hover:text-zinc-100 transition-colors"
           >
-            Return Home
+            მთავარზე დაბრუნება
           </button>
         </div>
       </div>

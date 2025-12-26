@@ -33,8 +33,8 @@ const AdminDashboard: React.FC = () => {
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-10">
             <div>
-              <h1 className="text-[22px] font-bold tracking-tight">Admin CMS</h1>
-              <p className="text-[12px] text-zinc-400 font-bold uppercase tracking-widest mt-0.5">Control Center</p>
+              <h1 className="text-[22px] font-bold tracking-tight">მართვის პანელი</h1>
+              <p className="text-[12px] text-zinc-400 font-bold uppercase tracking-widest mt-0.5">ცენტრალური ადმინისტრირება</p>
             </div>
             
             <nav className="flex items-center bg-zinc-50 dark:bg-zinc-900 p-1.5 rounded-2xl">
@@ -42,28 +42,28 @@ const AdminDashboard: React.FC = () => {
                 onClick={() => setActiveTab('projects')}
                 className={`px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all ${activeTab === 'projects' ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-600'}`}
               >
-                Projects
+                პროექტები
               </button>
               <button 
                 onClick={() => setActiveTab('gallery')}
                 className={`px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all ${activeTab === 'gallery' ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-600'}`}
               >
-                Process
+                პროცესი
               </button>
               <button 
                 onClick={() => setActiveTab('brand')}
                 className={`px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all ${activeTab === 'brand' ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-600'}`}
               >
-                Brand
+                ბრენდი
               </button>
             </nav>
           </div>
           
           <div className="flex items-center gap-4">
-            <button onClick={handleLogout} className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest hover:text-zinc-900">Logout</button>
+            <button onClick={handleLogout} className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest hover:text-zinc-900">გამოსვლა</button>
             {activeTab !== 'brand' && (
               <button onClick={openAddForm} className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-6 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-2">
-                Add {activeTab === 'projects' ? 'Project' : 'Process'}
+                დამატება
               </button>
             )}
           </div>
@@ -74,7 +74,7 @@ const AdminDashboard: React.FC = () => {
         {activeTab === 'projects' && (
           <div className="space-y-4">
             {projects.map((p) => (
-              <div key={p.id} className="flex items-center justify-between p-5 bg-white border border-zinc-100 dark:border-zinc-900 rounded-[24px]">
+              <div key={p.id} className="flex items-center justify-between p-5 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-[24px]">
                 <div className="flex items-center gap-6">
                   <img src={p.image} className="w-20 h-14 object-cover rounded-xl bg-zinc-100" />
                   <div>
@@ -83,8 +83,8 @@ const AdminDashboard: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => { setEditingItem(p); setIsFormOpen(true); }} className="p-3 text-zinc-400 hover:text-zinc-900">Edit</button>
-                  <button onClick={() => deleteProject(p.id)} className="p-3 text-red-300 hover:text-red-500">Delete</button>
+                  <button onClick={() => { setEditingItem(p); setIsFormOpen(true); }} className="p-3 text-zinc-400 hover:text-zinc-900">რედაქტირება</button>
+                  <button onClick={() => { if(confirm('დარწმუნებული ხართ?')) deleteProject(p.id) }} className="p-3 text-red-300 hover:text-red-500">წაშლა</button>
                 </div>
               </div>
             ))}
@@ -93,21 +93,21 @@ const AdminDashboard: React.FC = () => {
         {activeTab === 'gallery' && (
           <div className="space-y-4">
             {galleryItems.map((item) => (
-              <div key={item.id} className="flex items-center justify-between p-5 bg-white border border-zinc-100 dark:border-zinc-900 rounded-[24px]">
+              <div key={item.id} className="flex items-center justify-between p-5 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-[24px]">
                 <div className="flex items-center gap-6">
                   <div className="flex -space-x-4">
                     {item.images.slice(0, 3).map((img, i) => (
-                      <img key={i} src={img} className="w-12 h-12 rounded-full border-4 border-white object-cover" />
+                      <img key={i} src={img} className="w-12 h-12 rounded-full border-4 border-white dark:border-zinc-800 object-cover" />
                     ))}
                   </div>
                   <div>
                     <h3 className="font-bold">{item.projectTitle}</h3>
-                    <p className="text-[10px] text-zinc-400 uppercase tracking-widest font-bold">{item.period} {item.tags?.includes('profile') && '• PROFILE'}</p>
+                    <p className="text-[10px] text-zinc-400 uppercase tracking-widest font-bold">{item.period} {item.tags?.includes('profile') && '• პროფილი'}</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => { setEditingItem(item); setIsFormOpen(true); }} className="p-3 text-zinc-400 hover:text-zinc-900">Edit</button>
-                  <button onClick={() => deleteGalleryItem(item.id)} className="p-3 text-red-300 hover:text-red-500">Delete</button>
+                  <button onClick={() => { setEditingItem(item); setIsFormOpen(true); }} className="p-3 text-zinc-400 hover:text-zinc-900">რედაქტირება</button>
+                  <button onClick={() => { if(confirm('დარწმუნებული ხართ?')) deleteGalleryItem(item.id) }} className="p-3 text-red-300 hover:text-red-500">წაშლა</button>
                 </div>
               </div>
             ))}
