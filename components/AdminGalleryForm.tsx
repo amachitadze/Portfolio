@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { GalleryItem } from '../types';
 import { useApp } from '../store/AppContext';
+import RichTextEditor from './RichTextEditor';
 
 interface AdminGalleryFormProps {
   item?: GalleryItem | null;
@@ -73,11 +74,11 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
   };
 
   return (
-    <div className="fixed inset-0 bg-white dark:bg-zinc-950 z-[100] overflow-y-auto p-12">
-      <div className="max-w-4xl mx-auto">
+    <div className="fixed inset-0 bg-white dark:bg-zinc-950 z-[100] overflow-y-auto p-12 font-sans">
+      <div className="max-w-5xl mx-auto">
         <div className="flex justify-between items-center mb-16">
-          <h2 className="text-3xl font-black">{item ? 'პროცესის რედაქტირება' : 'ახალი სამუშაო პროცესი'}</h2>
-          <button onClick={onClose} className="text-zinc-400">დახურვა</button>
+          <h2 className="text-3xl font-black uppercase tracking-tight">{item ? 'პროცესის რედაქტირება' : 'ახალი სამუშაო პროცესი'}</h2>
+          <button onClick={onClose} className="text-[10px] font-black uppercase tracking-widest text-zinc-400">დახურვა</button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -99,29 +100,33 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase text-zinc-400 tracking-widest">მოკლე აღწერა</label>
-            <textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 p-4 rounded-xl outline-none min-h-[100px]" placeholder="აღწერეთ სამუშაო პროცესის ეს ეტაპი..." />
+            <label className="text-[10px] font-bold uppercase text-zinc-400 tracking-widest block mb-3">მოკლე აღწერა</label>
+            <RichTextEditor 
+              initialValue={formData.description}
+              onChange={(val) => setFormData(prev => ({ ...prev, description: val }))}
+              placeholder="აღწერეთ სამუშაო პროცესის ეს ეტაპი..."
+            />
           </div>
 
           <div className="space-y-4">
             <label className="text-[10px] font-bold uppercase text-zinc-400 tracking-widest block">გალერეა</label>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {formData.images.map((img, i) => (
-                <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
+                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden group border border-zinc-100 dark:border-zinc-800 shadow-sm">
                   <img src={img} className="w-full h-full object-cover" />
-                  <button type="button" onClick={() => removeImage(i)} className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center font-bold">წაშლა</button>
+                  <button type="button" onClick={() => removeImage(i)} className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center font-bold text-[10px] uppercase tracking-widest">წაშლა</button>
                 </div>
               ))}
-              <button type="button" onClick={() => fileInputRef.current?.click()} className="aspect-square border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl flex items-center justify-center text-zinc-400 hover:text-zinc-900 hover:border-zinc-900">
-                {isUploading ? '...' : '+ სურათის დამატება'}
+              <button type="button" onClick={() => fileInputRef.current?.click()} className="aspect-square border-2 border-dashed border-zinc-100 dark:border-zinc-800 rounded-2xl flex flex-col items-center justify-center text-zinc-300 hover:text-zinc-900 hover:border-zinc-900 transition-all">
+                {isUploading ? '...' : <><span className="text-2xl mb-1">+</span><span className="text-[8px] font-black uppercase tracking-widest">ატვირთვა</span></>}
               </button>
             </div>
             <input type="file" ref={fileInputRef} onChange={handleFileUpload} multiple className="hidden" accept="image/*" />
           </div>
 
           <div className="flex gap-4 pt-10">
-            <button type="submit" className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-10 py-4 rounded-2xl font-bold uppercase tracking-widest text-[11px]">შენახვა</button>
-            <button type="button" onClick={onClose} className="px-10 py-4 text-zinc-400 font-bold uppercase tracking-widest text-[11px]">გაუქმება</button>
+            <button type="submit" className="flex-1 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 py-5 rounded-[20px] font-black uppercase tracking-[0.2em] text-[11px] shadow-xl">შენახვა</button>
+            <button type="button" onClick={onClose} className="px-10 py-5 text-zinc-400 font-black uppercase tracking-widest text-[11px]">გაუქმება</button>
           </div>
         </form>
       </div>

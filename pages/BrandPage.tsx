@@ -68,13 +68,14 @@ const ColorCard: React.FC<ColorCardProps> = ({ color }) => {
       </div>
 
       <div className="relative">
-        <p className={`text-xs text-zinc-500 leading-relaxed ${!isExpanded ? 'line-clamp-2' : ''}`}>
-          {color.description}
-        </p>
-        {color.description?.length > 60 && (
+        <div 
+          className={`text-xs text-zinc-500 leading-relaxed prose prose-sm dark:prose-invert ${!isExpanded ? 'line-clamp-2' : ''}`}
+          dangerouslySetInnerHTML={{ __html: color.description }}
+        />
+        {color.description?.length > 100 && (
           <button 
             onClick={() => setIsExpanded(!isExpanded)} 
-            className="text-[10px] font-bold text-zinc-900 dark:text-zinc-100 uppercase mt-2 hover:underline"
+            className="text-[10px] font-black text-zinc-900 dark:text-zinc-100 uppercase mt-2 hover:underline tracking-widest"
           >
             {isExpanded ? 'ნაკლების ნახვა' : 'დეტალურად'}
           </button>
@@ -113,7 +114,6 @@ const BrandPage: React.FC = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
     } catch (e) {
-      // Fallback
       window.open(url, '_blank');
     }
   };
@@ -135,10 +135,10 @@ const BrandPage: React.FC = () => {
       <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex items-center justify-between glass-nav">
         <button 
           onClick={() => setView(isAdminAuthenticated ? 'ADMIN' : 'SITE')}
-          className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all"
+          className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-sm"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
           </svg>
           {isAdminAuthenticated ? 'ადმინ პანელი' : 'მთავარი'}
         </button>
@@ -157,7 +157,7 @@ const BrandPage: React.FC = () => {
         <h1 className="text-6xl md:text-9xl font-black tracking-tighter text-zinc-900 dark:text-zinc-50 leading-none">
           {brandData.strategy.brandName || 'Brand Book.'}
         </h1>
-        <p className="mt-10 text-xl md:text-2xl text-zinc-500 max-w-2xl font-light italic">
+        <p className="mt-10 text-xl md:text-2xl text-zinc-500 max-w-2xl font-light italic antialiased">
           "{brandData.strategy.slogan}"
         </p>
       </header>
@@ -168,52 +168,64 @@ const BrandPage: React.FC = () => {
         <section className="grid grid-cols-1 md:grid-cols-2 gap-20">
           <div className="space-y-12">
             <div>
-              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6">ვინ არის ბრენდი</h2>
-              <p className="text-2xl font-light leading-relaxed whitespace-pre-line">{brandData.strategy.whoIsBrand}</p>
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6 opacity-60">ვინ არის ბრენდი</h2>
+              <div 
+                className="text-2xl font-light leading-relaxed prose prose-xl dark:prose-invert max-w-none antialiased"
+                dangerouslySetInnerHTML={{ __html: brandData.strategy.whoIsBrand }}
+              />
             </div>
-            <div className="grid grid-cols-2 gap-8 py-8 border-y border-zinc-100 dark:border-zinc-900">
+            <div className="grid grid-cols-2 gap-8 py-10 border-y border-zinc-100 dark:border-zinc-900">
               <div className="space-y-2">
-                <span className="text-[9px] font-black uppercase text-zinc-300">არქეტიპი</span>
-                <p className="font-bold">{brandData.strategy.archetype}</p>
+                <span className="text-[9px] font-black uppercase text-zinc-300 tracking-widest">არქეტიპი</span>
+                <p className="text-xl font-bold">{brandData.strategy.archetype}</p>
               </div>
               <div className="space-y-2">
-                <span className="text-[9px] font-black uppercase text-zinc-300">პერსონა</span>
-                <p className="font-bold">{brandData.strategy.brandPersonification}</p>
+                <span className="text-[9px] font-black uppercase text-zinc-300 tracking-widest">პერსონა</span>
+                <p className="text-xl font-bold">{brandData.strategy.brandPersonification}</p>
               </div>
             </div>
             <div>
-              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6">მისია და დაპირება</h2>
-              <p className="text-lg text-zinc-500 leading-relaxed whitespace-pre-line">{brandData.strategy.brandMission}</p>
-              <div className="mt-6 p-6 bg-zinc-50 dark:bg-zinc-900 rounded-2xl border-l-4 border-zinc-900 dark:border-white">
-                <p className="font-bold italic whitespace-pre-line">"{brandData.strategy.brandPromise}"</p>
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6 opacity-60">მისია და დაპირება</h2>
+              <div 
+                className="text-lg text-zinc-500 leading-relaxed prose prose-lg dark:prose-invert max-w-none antialiased"
+                dangerouslySetInnerHTML={{ __html: brandData.strategy.brandMission }}
+              />
+              <div className="mt-10 p-10 bg-zinc-50 dark:bg-zinc-900 rounded-[32px] border-l-8 border-zinc-900 dark:border-white shadow-sm">
+                <div 
+                  className="font-bold italic prose dark:prose-invert max-w-none text-lg"
+                  dangerouslySetInnerHTML={{ __html: brandData.strategy.brandPromise }}
+                />
               </div>
             </div>
           </div>
           <div className="space-y-12">
             <div className="grid grid-cols-2 gap-8">
               <div className="space-y-2">
-                <span className="text-[9px] font-black uppercase text-zinc-300">კატეგორია</span>
-                <p className="font-bold">{brandData.strategy.brandCategory}</p>
+                <span className="text-[9px] font-black uppercase text-zinc-300 tracking-widest">კატეგორია</span>
+                <p className="text-xl font-bold">{brandData.strategy.brandCategory}</p>
               </div>
               <div className="space-y-2">
-                <span className="text-[9px] font-black uppercase text-zinc-300">მამოძრავებელი</span>
-                <p className="font-bold">{brandData.strategy.brandDriver}</p>
+                <span className="text-[9px] font-black uppercase text-zinc-300 tracking-widest">მამოძრავებელი</span>
+                <p className="text-xl font-bold">{brandData.strategy.brandDriver}</p>
               </div>
               <div className="space-y-2">
-                <span className="text-[9px] font-black uppercase text-zinc-300">ერთადერთობა</span>
-                <p className="font-bold">{brandData.strategy.brandUniqueness}</p>
+                <span className="text-[9px] font-black uppercase text-zinc-300 tracking-widest">ერთადერთობა</span>
+                <p className="text-xl font-bold">{brandData.strategy.brandUniqueness}</p>
               </div>
             </div>
             <div>
-              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6">ფასეულობები</h2>
-              <p className="text-lg text-zinc-500 leading-relaxed whitespace-pre-line">{brandData.strategy.brandValues}</p>
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6 opacity-60">ფასეულობები</h2>
+              <div 
+                className="text-lg text-zinc-500 leading-relaxed prose prose-lg dark:prose-invert max-w-none antialiased"
+                dangerouslySetInnerHTML={{ __html: brandData.strategy.brandValues }}
+              />
             </div>
           </div>
         </section>
 
         {/* 🎨 Colors Section */}
         <section>
-          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-16">ფერების სისტემა</h2>
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-16 opacity-60">ფერების სისტემა</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-16">
             {brandData.colors?.map(color => (
               <ColorCard key={color.id} color={color} />
@@ -223,53 +235,35 @@ const BrandPage: React.FC = () => {
 
         {/* 📐 Logos & Rules */}
         <section>
-          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-16">ვიზუალური იდენტობა და ლოგო</h2>
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-16 opacity-60">ვიზუალური იდენტობა და ლოგო</h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
               {brandData.logos.map(logo => (
-                <div key={logo.id} className="p-10 bg-zinc-50 dark:bg-zinc-900 rounded-[32px] flex items-center justify-center aspect-square relative group overflow-hidden border border-zinc-50 dark:border-zinc-900">
+                <div key={logo.id} className="p-10 bg-zinc-50 dark:bg-zinc-900 rounded-[32px] flex items-center justify-center aspect-square relative group overflow-hidden border border-zinc-50 dark:border-zinc-900 shadow-sm transition-all duration-500">
                   <img src={logo.pngUrl || logo.svgUrl} className="max-w-[70%] max-h-[70%] object-contain group-hover:scale-110 transition-transform duration-700" alt={logo.title} />
                   
-                  {/* Floating Action Buttons */}
                   <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3">
                     <div className="flex gap-2">
-                      <button 
-                        onClick={() => handleDownload(logo.pngUrl, 'logo.png')} 
-                        className="px-4 py-2 bg-zinc-900 text-white rounded-lg text-[8px] font-black uppercase hover:scale-105 active:scale-95 transition-all"
-                      >
-                        PNG Download
-                      </button>
-                      <button 
-                        onClick={() => copyToClipboard(logo.pngUrl)} 
-                        className="px-4 py-2 bg-zinc-900 text-white rounded-lg text-[8px] font-black uppercase hover:scale-105 active:scale-95 transition-all"
-                      >
-                        PNG Copy
-                      </button>
+                      <button onClick={() => handleDownload(logo.pngUrl, 'logo.png')} className="px-5 py-2.5 bg-zinc-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">PNG Download</button>
+                      <button onClick={() => copyToClipboard(logo.pngUrl)} className="px-5 py-2.5 bg-zinc-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">PNG Copy</button>
                     </div>
                     <div className="flex gap-2">
-                      <button 
-                        onClick={() => handleDownload(logo.svgUrl, 'logo.svg')} 
-                        className="px-4 py-2 bg-white text-zinc-900 rounded-lg text-[8px] font-black uppercase shadow-lg hover:scale-105 active:scale-95 transition-all"
-                      >
-                        SVG Download
-                      </button>
-                      <button 
-                        onClick={() => copyToClipboard(logo.svgUrl)} 
-                        className="px-4 py-2 bg-white text-zinc-900 rounded-lg text-[8px] font-black uppercase shadow-lg hover:scale-105 active:scale-95 transition-all"
-                      >
-                        SVG Copy
-                      </button>
+                      <button onClick={() => handleDownload(logo.svgUrl, 'logo.svg')} className="px-5 py-2.5 bg-white text-zinc-900 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg hover:scale-105 active:scale-95 transition-all">SVG Download</button>
+                      <button onClick={() => copyToClipboard(logo.svgUrl)} className="px-5 py-2.5 bg-white text-zinc-900 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg hover:scale-105 active:scale-95 transition-all">SVG Copy</button>
                     </div>
                   </div>
-                  <div className="absolute top-6 left-6 text-[10px] font-black uppercase tracking-widest text-zinc-300">
+                  <div className="absolute top-8 left-8 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-300">
                     {logo.title}
                   </div>
                 </div>
               ))}
             </div>
             <div className="space-y-8">
-              <h3 className="text-xl font-bold">გამოყენების წესები</h3>
-              <p className="text-zinc-500 leading-relaxed whitespace-pre-line">{brandData.logoRules}</p>
+              <h3 className="text-2xl font-black uppercase tracking-tight">გამოყენების წესები</h3>
+              <div 
+                className="text-zinc-500 leading-relaxed prose dark:prose-invert max-w-none antialiased"
+                dangerouslySetInnerHTML={{ __html: brandData.logoRules }}
+              />
             </div>
           </div>
         </section>
@@ -277,7 +271,7 @@ const BrandPage: React.FC = () => {
         {/* 👤 Profile/Lifestyle 9:16 Carousel */}
         {profileItems.length > 0 && (
           <section>
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-16">ბრენდის ვიზუალური სტილი</h2>
+            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-16 opacity-60">ბრენდის ვიზუალური სტილი</h2>
             <div className="flex gap-6 overflow-x-auto pb-10 snap-x no-scrollbar">
               {profileItems.map((item) => (
                 <div 
@@ -300,23 +294,23 @@ const BrandPage: React.FC = () => {
         {/* 🌀 Patterns & Typography */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-20 pb-40">
            <div>
-              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-12">ორნამენტული დიზაინი</h2>
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-12 opacity-60">ორნამენტული დიზაინი</h2>
               <div className="grid grid-cols-2 gap-4">
                 {brandData.patterns?.map(p => (
-                  <div key={p.id} className="aspect-square rounded-2xl overflow-hidden border border-zinc-100 dark:border-zinc-800">
+                  <div key={p.id} className="aspect-square rounded-[32px] overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-sm">
                     <img src={p.imageUrl} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
                   </div>
                 ))}
               </div>
            </div>
            <div>
-              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-12">ტიპოგრაფია</h2>
-              <div className="space-y-12">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-12 opacity-60">ტიპოგრაფია</h2>
+              <div className="space-y-16">
                 {brandData.fonts.map(font => (
-                  <div key={font.id}>
-                    <p className="text-4xl md:text-5xl mb-4" style={{ fontFamily: "'Google Sans', sans-serif" }}>{font.name}</p>
-                    <p className="text-zinc-400 text-sm mb-6 leading-relaxed">{font.sampleText || 'Abcdefghijklmnopqrstuvwxyz 0123456789'}</p>
-                    <a href={font.url} target="_blank" className="inline-flex items-center gap-2 text-[8px] font-black uppercase tracking-widest border-b border-zinc-900 dark:border-white pb-1">ჩამოტვირთვა <LinkIcon className="w-3 h-3" /></a>
+                  <div key={font.id} className="group">
+                    <p className="text-5xl md:text-7xl mb-6 tracking-tight leading-none antialiased group-hover:tracking-tighter transition-all duration-500" style={{ fontFamily: "'Google Sans', sans-serif" }}>{font.name}</p>
+                    <p className="text-zinc-400 text-lg mb-8 leading-relaxed font-light">{font.sampleText || 'Abcdefghijklmnopqrstuvwxyz 0123456789'}</p>
+                    <a href={font.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest border-b-2 border-zinc-900 dark:border-white pb-1.5 transition-all hover:gap-4">ჩამოტვირთვა <LinkIcon className="w-4 h-4" /></a>
                   </div>
                 ))}
               </div>
@@ -326,7 +320,7 @@ const BrandPage: React.FC = () => {
       </main>
 
       <footer className="py-20 bg-zinc-50 dark:bg-zinc-900 text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-300">
+        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-300 antialiased">
           ბრენდის იდენტობის სახელმძღვანელო • 2025
         </p>
       </footer>

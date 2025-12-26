@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { useApp } from '../store/AppContext';
 import { BrandData, LogoAsset, FontAsset, BrandColor, BrandPattern } from '../types';
+import RichTextEditor from './RichTextEditor';
 
 interface AdminBrandFormProps {
   onClose?: () => void;
@@ -12,7 +13,6 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
   const [data, setData] = useState<BrandData>(brandData);
   const [isSaving, setIsSaving] = useState(false);
   
-  const logoInputRef = useRef<HTMLInputElement>(null);
   const patternInputRef = useRef<HTMLInputElement>(null);
 
   const handleSave = async () => {
@@ -43,7 +43,6 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
     setData({ ...data, strategy: { ...data.strategy, [key]: value } });
   };
 
-  // --- Logos Management ---
   const addLogo = () => {
     const newLogo: LogoAsset = { id: Date.now().toString(), title: '', description: '', pngUrl: '', svgUrl: '' };
     setData({ ...data, logos: [...(data.logos || []), newLogo] });
@@ -57,7 +56,6 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
     setData({ ...data, logos: data.logos.filter(l => l.id !== id) });
   };
 
-  // --- Fonts Management ---
   const addFont = () => {
     const newFont: FontAsset = { id: Date.now().toString(), name: '', url: '', sampleText: '' };
     setData({ ...data, fonts: [...(data.fonts || []), newFont] });
@@ -71,7 +69,6 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
     setData({ ...data, fonts: data.fonts.filter(f => f.id !== id) });
   };
 
-  // --- Colors Management ---
   const addColor = () => {
     const newColor: BrandColor = { id: Date.now().toString(), name: 'ახალი ფერი', hex: '#000000', description: '' };
     setData({ ...data, colors: [...(data.colors || []), newColor] });
@@ -81,7 +78,6 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
     setData({ ...data, colors: data.colors.map(c => c.id === id ? { ...c, ...updates } : c) });
   };
 
-  // --- Patterns Management ---
   const handlePatternUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -102,36 +98,35 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
     <div className="space-y-20 pb-40 max-w-5xl mx-auto animate-in fade-in duration-500 font-sans">
       
       {/* 📋 Section 1: Brand Strategy */}
-      <section className="space-y-8 bg-zinc-50 dark:bg-zinc-900/50 p-10 rounded-[32px] border border-zinc-100 dark:border-zinc-800">
+      <section className="space-y-8 bg-zinc-50 dark:bg-zinc-900/50 p-10 rounded-[32px] border border-zinc-100 dark:border-zinc-800 shadow-sm">
         <h2 className="text-xl font-black uppercase tracking-widest text-zinc-400">ბრენდის სტრატეგია</h2>
-        <p className="text-[10px] text-zinc-400 italic">მინიშნება: გამოიყენეთ Enter ახალი ხაზისთვის (სიებისათვის).</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-zinc-400">1. ბრენდის სახელი და სლოგანი</label>
             <div className="grid grid-cols-2 gap-2">
-              <input value={data.strategy.brandName} onChange={e => updateStrategy('brandName', e.target.value)} className="bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" placeholder="სახელი" />
-              <input value={data.strategy.slogan} onChange={e => updateStrategy('slogan', e.target.value)} className="bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" placeholder="სლოგანი" />
+              <input value={data.strategy.brandName} onChange={e => updateStrategy('brandName', e.target.value)} className="bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm font-bold" placeholder="სახელი" />
+              <input value={data.strategy.slogan} onChange={e => updateStrategy('slogan', e.target.value)} className="bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm italic" placeholder="სლოგანი" />
             </div>
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase text-zinc-400">2. ვინ არის ბრენდი</label>
-            <textarea value={data.strategy.whoIsBrand} onChange={e => updateStrategy('whoIsBrand', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm min-h-[80px]" placeholder="აღწერეთ ბრენდის არსი" />
+            <label className="text-[10px] font-bold uppercase text-zinc-400 mb-2 block">2. ვინ არის ბრენდი</label>
+            <RichTextEditor initialValue={data.strategy.whoIsBrand} onChange={val => updateStrategy('whoIsBrand', val)} className="h-40" />
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-zinc-400">3. ბრენდის მამოძრავებელი</label>
             <input value={data.strategy.brandDriver} onChange={e => updateStrategy('brandDriver', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase text-zinc-400">4. ბრენდის მისია</label>
-            <textarea value={data.strategy.brandMission} onChange={e => updateStrategy('brandMission', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm min-h-[80px]" />
+            <label className="text-[10px] font-bold uppercase text-zinc-400 mb-2 block">4. ბრენდის მისია</label>
+            <RichTextEditor initialValue={data.strategy.brandMission} onChange={val => updateStrategy('brandMission', val)} className="h-40" />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase text-zinc-400">5. ბრენდის ფასეულობები</label>
-            <textarea value={data.strategy.brandValues} onChange={e => updateStrategy('brandValues', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm min-h-[80px]" />
+            <label className="text-[10px] font-bold uppercase text-zinc-400 mb-2 block">5. ბრენდის ფასეულობები</label>
+            <RichTextEditor initialValue={data.strategy.brandValues} onChange={val => updateStrategy('brandValues', val)} className="h-40" />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase text-zinc-400">6. ბრენდის პერსონიფიკაცია</label>
-            <textarea value={data.strategy.brandPersonification} onChange={e => updateStrategy('brandPersonification', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm min-h-[80px]" />
+            <label className="text-[10px] font-bold uppercase text-zinc-400 mb-2 block">6. ბრენდის პერსონიფიკაცია</label>
+            <RichTextEditor initialValue={data.strategy.brandPersonification} onChange={val => updateStrategy('brandPersonification', val)} className="h-40" />
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase text-zinc-400">7. ბრენდის ერთადერთობა</label>
@@ -146,8 +141,8 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
             <input value={data.strategy.archetype} onChange={e => updateStrategy('archetype', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm" />
           </div>
           <div className="md:col-span-2 space-y-2">
-            <label className="text-[10px] font-bold uppercase text-zinc-400">10. ბრენდის დაპირება</label>
-            <textarea value={data.strategy.brandPromise} onChange={e => updateStrategy('brandPromise', e.target.value)} className="w-full bg-white dark:bg-zinc-900 p-3 rounded-xl outline-none text-sm min-h-[60px]" />
+            <label className="text-[10px] font-bold uppercase text-zinc-400 mb-2 block">10. ბრენდის დაპირება</label>
+            <RichTextEditor initialValue={data.strategy.brandPromise} onChange={val => updateStrategy('brandPromise', val)} className="h-40" />
           </div>
         </div>
       </section>
@@ -156,7 +151,7 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
       <section className="space-y-8">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-black uppercase tracking-widest text-zinc-400">ლოგოები</h2>
-          <button onClick={addLogo} className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[10px] font-bold uppercase">+ ლოგოს დამატება</button>
+          <button onClick={addLogo} className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[10px] font-black uppercase tracking-widest">+ ლოგოს დამატება</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {data.logos.map(logo => (
@@ -169,13 +164,17 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
                 </div>
                 {logo.pngUrl && <img src={logo.pngUrl} className="w-20 h-20 object-contain bg-white rounded-xl p-2 border" />}
               </div>
-              <button onClick={() => removeLogo(logo.id)} className="text-[10px] text-red-500 font-bold uppercase">წაშლა</button>
+              <button onClick={() => removeLogo(logo.id)} className="text-[10px] text-red-500 font-bold uppercase tracking-widest">წაშლა</button>
             </div>
           ))}
         </div>
         <div className="space-y-4 pt-4">
-          <label className="text-[10px] font-bold uppercase text-zinc-400">ლოგოს გამოყენების წესები</label>
-          <textarea value={data.logoRules} onChange={e => setData({...data, logoRules: e.target.value})} className="w-full bg-zinc-50 dark:bg-zinc-900 p-6 rounded-[24px] outline-none min-h-[150px] border border-zinc-100 dark:border-zinc-800" placeholder="როგორ უნდა და როგორ არ უნდა იქნას გამოყენებული ლოგო..." />
+          <label className="text-[10px] font-bold uppercase text-zinc-400 block mb-2">ლოგოს გამოყენების წესები</label>
+          <RichTextEditor 
+            initialValue={data.logoRules}
+            onChange={val => setData({...data, logoRules: val})}
+            className="h-60"
+          />
         </div>
       </section>
 
@@ -183,17 +182,21 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
       <section className="space-y-6">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-black uppercase tracking-widest text-zinc-400">ფერების პალიტრა</h2>
-          <button onClick={addColor} className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[10px] font-bold uppercase">+ ფერის დამატება</button>
+          <button onClick={addColor} className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[10px] font-black uppercase tracking-widest">+ ფერის დამატება</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {data.colors?.map(color => (
-            <div key={color.id} className="p-6 border border-zinc-100 dark:border-zinc-800 rounded-2xl flex items-center gap-6 bg-white dark:bg-zinc-900">
-              <input type="color" value={color.hex} onChange={e => updateColor(color.id, { hex: e.target.value })} className="w-16 h-16 rounded-xl cursor-pointer bg-transparent border-none" />
-              <div className="flex-1 space-y-2">
-                <input placeholder="სახელი" value={color.name} onChange={e => updateColor(color.id, { name: e.target.value })} className="w-full bg-zinc-50 dark:bg-zinc-800 p-2 rounded-lg text-sm outline-none font-bold" />
-                <textarea placeholder="აღწერა/დანიშნულება" value={color.description} onChange={e => updateColor(color.id, { description: e.target.value })} className="w-full bg-zinc-50 dark:bg-zinc-800 p-2 rounded-lg text-xs outline-none min-h-[50px]" />
-                <button onClick={() => setData({ ...data, colors: data.colors.filter(c => c.id !== color.id) })} className="text-[10px] text-red-500 font-bold uppercase">წაშლა</button>
+            <div key={color.id} className="p-6 border border-zinc-100 dark:border-zinc-800 rounded-2xl flex flex-col gap-4 bg-white dark:bg-zinc-900 shadow-sm">
+              <div className="flex items-center gap-4">
+                <input type="color" value={color.hex} onChange={e => updateColor(color.id, { hex: e.target.value })} className="w-14 h-14 rounded-xl cursor-pointer bg-transparent border-none p-0 overflow-hidden" />
+                <input placeholder="ფერის სახელი" value={color.name} onChange={e => updateColor(color.id, { name: e.target.value })} className="flex-1 bg-zinc-50 dark:bg-zinc-800 p-3 rounded-lg text-sm outline-none font-bold" />
               </div>
+              <RichTextEditor 
+                initialValue={color.description}
+                onChange={val => updateColor(color.id, { description: val })}
+                className="h-32"
+              />
+              <button onClick={() => setData({ ...data, colors: data.colors.filter(c => c.id !== color.id) })} className="text-[10px] text-red-500 font-bold uppercase tracking-widest self-end">წაშლა</button>
             </div>
           ))}
         </div>
@@ -203,26 +206,26 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
       <section className="space-y-8">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-black uppercase tracking-widest text-zinc-400">ტიპოგრაფია</h2>
-          <button onClick={addFont} className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[10px] font-bold uppercase">+ ფონტის დამატება</button>
+          <button onClick={addFont} className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[10px] font-black uppercase tracking-widest">+ ფონტის დამატება</button>
         </div>
         <div className="space-y-4">
           {data.fonts.map(font => (
-            <div key={font.id} className="p-6 border border-zinc-100 dark:border-zinc-800 rounded-2xl bg-white dark:bg-zinc-900 grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div key={font.id} className="p-6 border border-zinc-100 dark:border-zinc-800 rounded-2xl bg-white dark:bg-zinc-900 grid grid-cols-1 md:grid-cols-3 gap-4 items-end shadow-sm">
               <div>
-                <label className="text-[8px] uppercase font-bold text-zinc-400 mb-2 block">სახელი</label>
-                <input value={font.name} onChange={e => updateFont(font.id, { name: e.target.value })} className="w-full bg-zinc-50 dark:bg-zinc-800 p-3 rounded-xl outline-none text-sm" />
+                <label className="text-[8px] uppercase font-bold text-zinc-400 mb-2 block">ფონტის სახელი</label>
+                <input value={font.name} onChange={e => updateFont(font.id, { name: e.target.value })} className="w-full bg-zinc-50 dark:bg-zinc-800 p-3 rounded-xl outline-none text-sm font-bold" />
               </div>
               <div>
                 <label className="text-[8px] uppercase font-bold text-zinc-400 mb-2 block">ჩამოსატვირთი ლინკი</label>
-                <input value={font.url} onChange={e => updateFont(font.id, { url: e.target.value })} className="w-full bg-zinc-50 dark:bg-zinc-800 p-3 rounded-xl outline-none text-sm" />
+                <input value={font.url} onChange={e => updateFont(font.id, { url: e.target.value })} className="w-full bg-zinc-50 dark:bg-zinc-800 p-3 rounded-xl outline-none text-xs" />
               </div>
               <div className="flex items-center gap-4">
                 <div className="flex-1">
                   <label className="text-[8px] uppercase font-bold text-zinc-400 mb-2 block">ნიმუში</label>
                   <input value={font.sampleText} onChange={e => updateFont(font.id, { sampleText: e.target.value })} className="w-full bg-zinc-50 dark:bg-zinc-800 p-3 rounded-xl outline-none text-sm" />
                 </div>
-                <button onClick={() => removeFont(font.id)} className="text-red-500 hover:text-red-700">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <button onClick={() => removeFont(font.id)} className="text-red-500 hover:text-red-700 p-3">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </button>
               </div>
             </div>
@@ -234,14 +237,14 @@ const AdminBrandForm: React.FC<AdminBrandFormProps> = ({ onClose }) => {
       <section className="space-y-8">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-black uppercase tracking-widest text-zinc-400">გრაფიკული ნიმუშები (Patterns)</h2>
-          <button onClick={() => patternInputRef.current?.click()} className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[10px] font-bold uppercase">+ ატვირთვა</button>
+          <button onClick={() => patternInputRef.current?.click()} className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[10px] font-black uppercase tracking-widest">+ ატვირთვა</button>
           <input type="file" multiple ref={patternInputRef} onChange={handlePatternUpload} className="hidden" accept="image/*" />
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
           {data.patterns?.map(pattern => (
             <div key={pattern.id} className="relative group aspect-square rounded-2xl overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-sm">
               <img src={pattern.imageUrl} className="w-full h-full object-cover" alt={pattern.title} />
-              <button onClick={() => removePattern(pattern.id)} className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center font-bold text-[10px] uppercase">წაშლა</button>
+              <button onClick={() => removePattern(pattern.id)} className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center font-bold text-[10px] uppercase tracking-widest transition-all">წაშლა</button>
             </div>
           ))}
         </div>

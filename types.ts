@@ -11,6 +11,7 @@ export interface Project {
   tags: string[];
   year?: string;
   client?: string;
+  demoUrl?: string; // დემო ლინკის ველი
   content: string;
 }
 
