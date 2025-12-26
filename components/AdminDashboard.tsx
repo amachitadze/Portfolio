@@ -113,7 +113,7 @@ const AdminDashboard: React.FC = () => {
             ))}
           </div>
         )}
-        {activeTab === 'brand' && <AdminBrandForm />}
+        {activeTab === 'brand' && <AdminBrandForm onClose={() => setActiveTab('projects')} />}
       </main>
     </div>
   );

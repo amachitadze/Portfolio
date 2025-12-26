@@ -20,7 +20,7 @@ export interface GalleryItem {
   description: string;
   period: string;
   images: string[];
-  tags?: string[]; // დაემატა ტეგები გალერეის ნივთებისთვის
+  tags?: string[];
 }
 
 export interface LogoAsset {
@@ -38,7 +38,31 @@ export interface FontAsset {
   sampleText?: string;
 }
 
+export interface BrandColor {
+  id: string;
+  name: string;
+  hex: string;
+  rgb?: string;
+  description: string;
+}
+
+export interface BrandPattern {
+  id: string;
+  title: string;
+  imageUrl: string;
+}
+
 export interface BrandStrategy {
+  brandName: string;
+  slogan: string;
+  whoIsBrand: string;
+  brandDriver: string;
+  brandMission: string;
+  brandValues: string;
+  brandPersonification: string;
+  brandUniqueness: string;
+  brandCategory: string;
+  brandPromise: string;
   archetype: string;
   purpose: string;
   goal: string;
@@ -47,7 +71,10 @@ export interface BrandStrategy {
 
 export interface BrandData {
   logos: LogoAsset[];
+  logoRules: string;
   fonts: FontAsset[];
+  colors: BrandColor[];
+  patterns: BrandPattern[];
   strategy: BrandStrategy;
 }
 

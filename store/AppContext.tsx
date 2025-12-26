@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { Language, View, Project, GalleryItem, BrandData } from '../types';
 import { supabase } from '../services/supabase';
-import { PROJECTS, INITIAL_GALLERY_ITEMS } from '../constants';
+import { PROJECTS } from '../constants';
 
 interface AppState {
   lang: Language;
@@ -37,8 +37,21 @@ const AppContext = createContext<AppState | undefined>(undefined);
 
 const INITIAL_BRAND_DATA: BrandData = {
   logos: [],
+  logoRules: '',
   fonts: [],
+  colors: [],
+  patterns: [],
   strategy: {
+    brandName: '',
+    slogan: '',
+    whoIsBrand: '',
+    brandDriver: '',
+    brandMission: '',
+    brandValues: '',
+    brandPersonification: '',
+    brandUniqueness: '',
+    brandCategory: '',
+    brandPromise: '',
     archetype: '',
     purpose: '',
     goal: '',
@@ -79,7 +92,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
         if (projectsData) setProjects(projectsData);
         if (galleryData) setGalleryItems(galleryData);
-        if (brandConfig?.data) setBrandData(brandConfig.data);
+        if (brandConfig?.data) setBrandData({ ...INITIAL_BRAND_DATA, ...brandConfig.data });
       } catch (error) {
         console.error('Fetch error:', error);
       } finally {
@@ -110,11 +123,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addGalleryItem = async (item: GalleryItem) => {
     const { id, ...payload } = item;
     const { data, error } = await supabase.from('gallery_items').insert([payload]).select();
-    if (error) {
-      alert('ბაზაში შენახვის შეცდომა: ' + error.message + '\nდარწმუნდით რომ tags სვეტი არსებობს!');
-    } else if (data) {
-      setGalleryItems([data[0], ...galleryItems]);
-    }
+    if (error) alert('Error: ' + error.message);
+    else if (data) setGalleryItems([data[0], ...galleryItems]);
   };
 
   const updateGalleryItem = async (item: GalleryItem) => {
