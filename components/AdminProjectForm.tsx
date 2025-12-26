@@ -3,9 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Project } from '../types';
 import { useApp } from '../store/AppContext';
 
-/**
- * ადმინ პანელის პროექტის ფორმა.
- */
 interface AdminProjectFormProps {
   project?: Project | null;
   onClose: () => void;
@@ -34,20 +31,16 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
     }
   }, [project]);
 
-  // ტექსტური რედაქტორის ბრძანებები
   const execCommand = (command: string, value: string = '') => {
     document.execCommand(command, false, value);
     editorRef.current?.focus();
   };
 
-  /**
-   * სურათის ატვირთვა ImgBB სერვისზე.
-   * იყენებს IMGBB_API_KEY გარემოს ცვლადს.
-   */
   const uploadToImgBB = async (file: File) => {
+    // უზრუნველვყოფთ, რომ process.env ყოველთვის შემოწმდეს
     const key = process.env.IMGBB_API_KEY;
     if (!key) {
-      alert('ImgBB API Key ვერ მოიძებნა. დაამატეთ IMGBB_API_KEY Vercel-ზე.');
+      alert('ImgBB API Key ვერ მოიძებნა Vercel-ის ცვლადებში.');
       return { success: false };
     }
     const uploadData = new FormData();
@@ -63,7 +56,6 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
     }
   };
 
-  // ქავერის ატვირთვა
   const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -72,12 +64,11 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ project, onClose })
     if (result.success) {
       setFormData({ ...formData, image: result.data.url });
     } else {
-      alert('ატვირთვა ვერ მოხერხდა. შეამოწმეთ API გასაღები.');
+      alert('ატვირთვა ვერ მოხერხდა. შეამოწმეთ IMGBB_API_KEY Vercel-ში.');
     }
     setIsCoverUploading(false);
   };
 
-  // შიგთავსის სურათების ატვირთვა
   const handleContentFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;

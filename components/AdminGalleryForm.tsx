@@ -18,13 +18,16 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
     description: item?.description || '',
     period: item?.period || '',
     images: item?.images || [] as string[],
-    tags: item?.tags?.join(', ') || '', // დაემატა ტეგების ველი
+    tags: item?.tags?.join(', ') || '',
   });
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    const apiKey = typeof process !== 'undefined' ? process.env.IMGBB_API_KEY : '';
-    if (!files || !apiKey) return;
+    const apiKey = process.env.IMGBB_API_KEY;
+    if (!files || !apiKey) {
+      if (!apiKey) alert('IMGBB_API_KEY არ არის გაწერილი Vercel-ში.');
+      return;
+    }
     setIsUploading(true);
     const newImages = [...formData.images];
     for (let i = 0; i < files.length; i++) {
@@ -51,7 +54,7 @@ const AdminGalleryForm: React.FC<AdminGalleryFormProps> = ({ item, onClose }) =>
       description: formData.description,
       period: formData.period,
       images: formData.images,
-      tags: formData.tags.split(',').map(t => t.trim()).filter(t => t !== ''), // ტეგების პარსინგი
+      tags: formData.tags.split(',').map(t => t.trim()).filter(t => t !== ''),
     };
     item ? await updateGalleryItem(newItem) : await addGalleryItem(newItem);
     onClose();

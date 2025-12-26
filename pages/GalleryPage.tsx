@@ -8,12 +8,13 @@ const GalleryPage: React.FC = () => {
   const [columns, setColumns] = useState<1 | 2>(2);
   
   const handleAuth = (password: string) => {
-    const securePassword = process.env.GALLERY_PASSWORD || 'gallery123';
+    // მხოლოდ გარემოს ცვლადი
+    const securePassword = process.env.GALLERY_PASSWORD;
     
-    if (password === securePassword) { 
+    if (securePassword && password === securePassword) { 
       setGalleryAuthenticated(true);
     } else {
-      alert('არასწორი პაროლი! (თუ Vercel ცვლადი არ მუშაობს, სცადეთ gallery123)');
+      alert('არასწორი პაროლი! შეამოწმეთ GALLERY_PASSWORD ცვლადი Vercel-ში.');
     }
   };
 

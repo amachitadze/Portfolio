@@ -8,13 +8,14 @@ const AdminLoginPage: React.FC = () => {
   const { isAdminAuthenticated, setAdminAuthenticated } = useApp();
 
   const handleLogin = (password: string) => {
-    // სარეზერვო პაროლი 'admin123' იმ შემთხვევისთვის, თუ process.env.ADMIN_PASSWORD ვერ იკითხება
-    const securePassword = process.env.ADMIN_PASSWORD || 'admin123';
+    // ვიყენებთ მხოლოდ Vercel-ში გაწერილ პაროლს. 
+    // ჰარდკოდირებული 'admin123' წაშლილია უსაფრთხოებისთვის.
+    const securePassword = process.env.ADMIN_PASSWORD;
     
-    if (password === securePassword) {
+    if (securePassword && password === securePassword) {
       setAdminAuthenticated(true);
     } else {
-      alert('არასწორი პაროლი! (თუ Vercel ცვლადი არ მუშაობს, სცადეთ admin123)');
+      alert('არასწორი პაროლი! გთხოვთ შეამოწმოთ ADMIN_PASSWORD ცვლადი Vercel-ის პანელში.');
     }
   };
 

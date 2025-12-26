@@ -3,28 +3,22 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 /**
  * 🛠 Supabase კონფიგურაცია
- * მონაცემთა ბაზასთან კავშირის დასამყარებლად საჭიროა URL და API გასაღები.
+ * ვიყენებთ მხოლოდ გარემოს ცვლადებს. Placeholder-ები წაშლილია 
+ * იმისთვის, რომ არასწორმა URL-მა არ გამოიწვიოს აპლიკაციის გაჭედვა.
  */
-const supabaseUrl = process.env.SUPABASE_URL || 'https://your-project.supabase.co';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'your-key';
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
 
 /**
- * 🛡 ვალიდაცია: ვამოწმებთ არის თუ არა URL სწორი ფორმატის.
- * თუ URL არასწორია, აპლიკაცია არ გაითიშება და გამოიყენებს placeholder-ს.
+ * 🛡 ვალიდაცია: ვამოწმებთ არის თუ არა URL და Key მოწოდებული.
  */
-const isValidUrl = (url: string) => {
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
-};
+const isConfigured = supabaseUrl && supabaseAnonKey && supabaseUrl !== 'https://your-project.supabase.co';
 
-/**
- * 🚀 Supabase კლიენტის ინიციალიზაცია
- */
+if (!isConfigured) {
+  console.warn('⚠️ Supabase variables are missing. Please check your Environment Variables in Vercel.');
+}
+
 export const supabase = createClient(
-  isValidUrl(supabaseUrl) ? supabaseUrl : 'https://placeholder.supabase.co',
-  supabaseAnonKey
+  isConfigured ? supabaseUrl : 'https://placeholder-to-prevent-crash.supabase.co',
+  isConfigured ? supabaseAnonKey : 'no-key'
 );
