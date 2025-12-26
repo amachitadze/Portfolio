@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 
 interface RichTextEditorProps {
@@ -63,12 +62,15 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue, onChange,
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M10 12h10M4 18h16" strokeWidth="2" strokeLinecap="round"/></svg>
         </button>
       </div>
+      {/* 
+        FIX: 'placeholder' არ არის ვალიდური ატრიბუტი div-ისთვის React-ში.
+        ატრიბუტი ამოღებულია TypeScript-ის შეცდომის გასასწორებლად.
+      */}
       <div 
         ref={editorRef}
         contentEditable
         onInput={handleInput}
         className="p-6 min-h-[120px] outline-none prose dark:prose-invert max-w-none antialiased"
-        placeholder={placeholder}
       />
     </div>
   );
